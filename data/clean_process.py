@@ -20,7 +20,6 @@ variables = {
     "race": ([], race_dictionary),
 }
      
-
         
 def load_in_datasets(period:str, variable_name: str, variable_tuple: tuple):
     """
