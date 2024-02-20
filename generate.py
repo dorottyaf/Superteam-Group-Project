@@ -66,7 +66,7 @@ income_2009_vars = ("NAME", "B08119_002E", "B08119_003E", "B08119_004E", "B08119
 
 # These are defined separately because the years have different variable codings
 # Will be joined with respective datasets in cleaning
-population_0914 = ("NAME", "B00001_001E")
+population_0914 = ("NAME", "B01001_001E")
 population_1922 = ("NAME", "B01003_001E")
 
 make_pull(2019, gender_vars, "data/raw_data/2015-2019/gender_2015-2019.csv")
