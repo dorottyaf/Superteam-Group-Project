@@ -19,7 +19,7 @@ income_categories = {
 }
 
 
-household_income_categories = {
+household_categories = {
     "0-25k": ["less_than_10k", "10-15k", "15-20k", "20-25k"],
     "25-60k": ["25-30k", "30-35k", "35-40k", "40-45k", "45-50k", "50-60k"],
     "60-100k": ["60-75k", "75-100k"],
