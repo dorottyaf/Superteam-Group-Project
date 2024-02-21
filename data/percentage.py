@@ -7,7 +7,7 @@ EXCLUDE = ["NAME", "state", "county", "tract", "population", "period"]
 def load_in_dataframe(name:str):
     csv_name = name + "_data.csv"
     filename = pathlib.Path(__file__).parent / "clean_data" / csv_name
-    data = pd.read_csv(filename)
+    data = pd.read_csv(filename, index_col=0)
 
     return data
 
