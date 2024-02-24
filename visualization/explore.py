@@ -39,3 +39,4 @@ for var in variables:
                 png_name = str(name) + "_age_plot.png"
                 direc = pathlib.Path(__file__).parent / 'temp_graphs' / png_name
                 plt.savefig(direc)
+                plt.clf()
