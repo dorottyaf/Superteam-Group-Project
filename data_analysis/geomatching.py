@@ -2,36 +2,39 @@ import geopandas as gpd
 import pathlib
 from collections import namedtuple
 
-def tract_import_raw():
-    tract_path = pathlib.Path(__file__).parent / "Location Information" / "tl_2010_17001_tract00" / "tl_2010_17001_tract00.shp"
-    tracts_df = gpd.read_file(tract_path)
-    return tracts_df
+'''
+Takes inputs based on the datasets people want to use. Options include 3 sets of 
+Census tracts by decade (2000, 2010, 2020) and Zip Codes for Chicago for smaller
+shapes being rolled up, and Community Area as the larger shape being rolled into.
+'''
 
-def comm_area_import_raw():
-    ca_path = pathlib.Path(__file__).parent / "Location Information" / "Boundaries - Community Areas (current)" / "geo_export_8fac6090-b29a-4cf4-b6ab-c66b0d4da44a.shp"
-    ca_df = gpd.read_file(ca_path)
-    return ca_df
+#Path Variables for shapefiles
+TRACT_2000 = "TBD"
+TRACT_2010 = "TBD"
+TRACT_2020 = pathlib.Path(__file__).parent / "Location Information" / "tl_2020_17_tract" / "tl_2020_17_tract.shp"
+ZIP_CODES = pathlib.Path(__file__).parent / "Location Information" / "Boundaries - ZIP Codes" / "geo_export_0ee546b2-a3fb-4bdb-8cc1-febaad94a4d8.shp"
+COMM_AREAS = pathlib.Path(__file__).parent / "Location Information" / "Boundaries - Community Areas (current)" / "geo_export_8fac6090-b29a-4cf4-b6ab-c66b0d4da44a.shp" 
 
-def zip_import_raw():
-    zip_path = pathlib.Path(__file__).parent / "Location Information" / "Boundaries - ZIP Codes" / "geo_export_0ee546b2-a3fb-4bdb-8cc1-febaad94a4d8.shp"
-    zip_df = gpd.read_file(zip_path)
-    return zip_df
 
-# Goal - 2 Dictionaries, one mapping census tract -> comm area, one zip -> comm area
+def shape_matcher(small_name, large_name):
+    '''
+    Inputs: 
+        small_df: name of smaller set of shapes, giving the global path variable 
+        large_df: name of larger set of shapes, giving the global path variable 
 
-def geodict_generator(data_frame):
-    
-    comm_area_dict = {}
-    for row in data_frame.itertuples():
-        comm_area_dict[row[6]] = []
-    
-    return comm_area_dict
-
-def shape_matcher(small_df, large_df):
-
+    Returns:
+        comm_area_dict: Dictionary where keys are the larger shape, and each value is
+        a list of smaller shapes that will be included in 
+    '''
+    small_df = gpd.read_file(small_name)
+    large_df = gpd.read_file(large_name)
     large_df = large_df.to_crs(3857)
     small_df = small_df.to_crs(3857)
-    comm_area_dict = geodict_generator(large_df)
+
+    comm_area_dict = {}
+    for row in large_df.itertuples():
+        #Specific to Community Areas, would need to be updated for other maps.
+        comm_area_dict[row[6]] = []
     
     small_areas = small_df.area
 
