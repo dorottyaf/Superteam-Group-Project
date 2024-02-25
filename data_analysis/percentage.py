@@ -43,6 +43,6 @@ def make_percentage_files():
 
         name = variable + "_percentage_data.csv"
         filename = pathlib.Path(__file__).parent / "clean_data" / name
-        data.to_csv(filename)
+        data.to_csv(filename, index=False)
 
 make_percentage_files()

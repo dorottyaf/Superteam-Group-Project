@@ -73,7 +73,7 @@ def fix_2005_2009_data(data: pd, variable_name: str):
         for new, old in income_conversion.items():
             if new == "B06010_002E":
                 name_column_index = data.columns.get_loc("NAME")
-                data.insert(name_column_index + 1, new, pd.NA)
+                data.insert(name_column_index + 1, new, 0)
                 continue
             data = combine_columns(new, old, data)
     
@@ -94,14 +94,17 @@ def make_combined_datasets(variable_name: str, variable_tuple: tuple):
     # save the clean dataset
     name = variable_name + "_data.csv"
     filename = pathlib.Path(__file__).parent / "clean_data" / name
-    data.to_csv(filename)
+    data.to_csv(filename, index=False)
 
 
 def combine_columns(new_name: str, old_names: list, dataframe: pd):
     """
     Combines columns in a dataframe into a new column
     """
+    # change the first one in place so the dataframe stays pretty
     dataframe.rename(columns = {old_names[0] : new_name}, inplace = True)
+
+    # add and drop the remaining columns to the renamed column
     for instance in old_names[1:]:
         dataframe[new_name] = dataframe[new_name] + dataframe[instance]
         dataframe = dataframe.drop(instance, axis = "columns")
