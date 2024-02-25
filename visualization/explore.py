@@ -8,6 +8,7 @@ import pprint
 variables = ["age", "ethnicity", "household", "educ", "gender", "income", "race"]
 COLS_TO_DROP = ['NAME', 'state', 'county', 'tract', 'population', 'period']
 COLS_TO_DROP2 = ['NAME', 'state', 'county', 'tract', 'population']
+COLS_TO_DROP3 = ['COUNTYFP', 'NAME', 'NAMELSAD', 'MTFCC', 'FUNCSTAT', 'ALAND', 'AWATER', 'INTPTLAT', 'INTPTLON']
 age_top_10 = [835700, 611800, 834600, 670100, 251700, 835600, 690500, 380500, 830201, 841400]
 eth_top_10 = []
 hh_top_10 = []
@@ -62,9 +63,28 @@ for var in variables:
     df["GEOID"] = df['state'].astype(str) + '0' + df['county'].astype(str) + df['tract'].astype(str)
     df = df.drop(columns= COLS_TO_DROP2)
     df_merge = df.merge(cook_tract, on= 'GEOID', how= 'left')
+    df_sub = df_merge.drop(columns= COLS_TO_DROP3)
+    # doing just one period
+    df_sub = df_sub[df_sub['period'] == '2005-2009']
+    df_sub = gpd.GeoDataFrame(df_sub)
     if var == 'age':
         print(cook_tract.head(2))
         print('Shape, ', cook_tract.shape)
         print("\nThe shapefile projection is: {}".format(cook_tract.crs))
         print(df)
         print(df_merge)
+        print(df_sub)
+        print(df_sub.columns)
+        # Create subplots
+        fig, ax = plt.subplots(1, 1, figsize = (20, 10))
+        df_sub.plot(column = "18-24",
+                       ax = ax,
+                       cmap = "RdPu",
+                       legend = True)
+        # Stylize plots
+        plt.style.use('bmh')
+
+        # Set title
+        ax.set_title('Rates of People Aged 18-24', fontdict = {'fontsize': '25', 'fontweight' : '3'})
+        plt.show()
+        plt.clf()
