@@ -9,8 +9,8 @@ shapes being rolled up, and Community Area as the larger shape being rolled into
 '''
 
 #Path Variables for shapefiles
-TRACT_2000 = "TBD"
-TRACT_2010 = "TBD"
+TRACT_2000 = pathlib.Path(__file__).parent / "Location Information" / "Boundaries - Census Tracts - 2000" / "geo_export_c39c40c3-f0d6-44b1-b60d-c608f5f21ffe.shp" 
+TRACT_2010 = pathlib.Path(__file__).parent / "Location Information" / "tl_2010_17_tract" / "tl_2018_17_tract.shp"
 TRACT_2020 = pathlib.Path(__file__).parent / "Location Information" / "tl_2020_17_tract" / "tl_2020_17_tract.shp"
 ZIP_CODES = pathlib.Path(__file__).parent / "Location Information" / "Boundaries - ZIP Codes" / "geo_export_0ee546b2-a3fb-4bdb-8cc1-febaad94a4d8.shp"
 COMM_AREAS = pathlib.Path(__file__).parent / "Location Information" / "Boundaries - Community Areas (current)" / "geo_export_8fac6090-b29a-4cf4-b6ab-c66b0d4da44a.shp" 
