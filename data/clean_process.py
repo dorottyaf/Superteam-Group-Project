@@ -1,33 +1,17 @@
 import pathlib
-from conversion_dics import age_conversion, educ_conversion, income_conversion
-from column_conversion import age_dictionary, educ_dictionary, income_dictionary, \
-    ethnicity_dictionary, gender_dictionary, household_dictionary, race_dictionary
-from combination_dicts import age_categories, income_categories, household_categories
-from ..data_analysis.geomatching import TRACT_2000, TRACT_2010, TRACT_2020, \
-    COMM_AREAS, shape_matcher
-
+from .tract_matching import get_community_areas
+from .conversion_dics import age_conversion, educ_conversion, income_conversion
 import pandas as pd
-
-
-# list of years and variables
-years = ["2005-2009", "2010-2014", "2015-2019", "2018-2022"]
-# dictionary of the datasets for a variable, and their conversion dictionaries
-# in a tuple
-variables = {
-    "age": ([], age_dictionary, age_categories),
-    "ethnicity": ([], ethnicity_dictionary),
-    "household": ([], household_dictionary, household_categories),
-    "educ": ([], educ_dictionary),
-    "gender": ([], gender_dictionary),
-    "income": ([], income_dictionary, income_categories),
-    "race": ([], race_dictionary),
-}
-     
+    
         
 def get_one_dataset(period:str, variable_name: str, variable_tuple: tuple):
     """
-    Load in the raw data, append some missing columns, and append it to the list
-    in its corresponding dictionary
+    For one variable in one time period, get the raw data, add a population column,
+    add a column to record the time period, and convert the tracts to community
+    areas.
+
+    Essentially get one complete dataset for a given variable at a given timeperiod,
+    then append it to it's corresponding variable list
     """
     current_file = variable_name + "_" + period + ".csv"
     filename = pathlib.Path(__file__).parent / "raw_data" / period / current_file
@@ -38,23 +22,53 @@ def get_one_dataset(period:str, variable_name: str, variable_tuple: tuple):
         data = fix_2005_2009_data(data, variable_name)
 
     # loading the population data to add to the dataframe
+    data = add_population(data, period)
+
+    # creating a variable to record the period
+    data["period"] = [period] * len(data)
+
+    # make tracts into community areas
+    data = get_community_areas(data, period)
+        
+    # adding data to the dictionary
+    variable_tuple[0].append(data)
+
+    return variable_tuple
+
+
+def make_combined_datasets(variable_name: str, variable_tuple: tuple):
+    """
+    Combine the different datasets for a variable into one large dataset
+    """
+    #combine datasets into one large one and rename them
+    data = pd.concat(variable_tuple[0])
+    data.rename(columns = variable_tuple[1], inplace = True)
+
+    # combine some columns in age, income, household income
+    data = combine_age_income_household(data, variable_name, variable_tuple)
+
+    # save the clean dataset
+    name = variable_name + "_data.csv"
+    filename = pathlib.Path(__file__).parent / "clean_data" /name
+    data.to_csv(filename, index=False)
+
+
+def add_population(dataframe:pd, period:str):
+    """
+    Given a dataframe and a period of time, add a column recording the 
+    corresponding population to each tract
+    """
     population_file = "population_" + period + ".csv"
     popfile = pathlib.Path(__file__).parent / "raw_data" / period / population_file
     pop_data = pd.read_csv(popfile)
     
     # creating a variable to record the population
     if period == "2005-2009" or period == "2010-2014":
-        data["population"] = pop_data["B01001_001E"]
+        dataframe["population"] = pop_data["B01001_001E"]
     if period == "2015-2019" or period == "2018-2022":
-        data["population"] = pop_data["B01003_001E"]
-
-    # creating a variable to record the period
-    data["period"] = [period] * len(data)
-        
-    # adding data to the dictionary
-    variable_tuple[0].append(data)
-
-    return variable_tuple
+        dataframe["population"] = pop_data["B01003_001E"]
+    
+    return dataframe
 
 
 def fix_2005_2009_data(data: pd, variable_name: str):
@@ -80,36 +94,6 @@ def fix_2005_2009_data(data: pd, variable_name: str):
             data = combine_columns(new, old, data)
     
     return data
-
-
-def tract_to_community(dataset, period):
-    """
-    Takes a dataset and combines the tracts into the community areas for 
-    that year
-    """
-
-    if period == "2005-2009":
-    
-    if period == "2010-2014" or period == "2015-2019":
-
-    if period == "2018-2022":
-
-
-def make_combined_datasets(variable_name: str, variable_tuple: tuple):
-    """
-    Combine the different datasets for a variable into one large dataset
-    """
-    #combine datasets into one large one and rename them
-    data = pd.concat(variable_tuple[0])
-    data.rename(columns = variable_tuple[1], inplace = True)
-
-    # combine some columns in age, income, household income
-    data = combine_age_income_household(data, variable_name, variable_tuple)
-
-    # save the clean dataset
-    name = variable_name + "_data.csv"
-    filename = pathlib.Path(__file__).parent / "clean_data" / name
-    data.to_csv(filename, index=False)
 
 
 def combine_columns(new_name: str, old_names: list, dataframe: pd):
@@ -146,9 +130,3 @@ def combine_age_income_household(dataframe: pd, variable_name: str, variable_tup
             dataframe = combine_columns(new, old, dataframe)
     
     return dataframe
-
-
-for name, tuples in variables.items():
-    for period in years:
-        tuples = get_one_dataset(period, name, tuples)
-    make_combined_datasets(name, tuples)

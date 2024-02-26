@@ -1,6 +1,6 @@
 import pandas as pd
 import pathlib
-from clean_process import variables
+from .cleaning import variables
 
 EXCLUDE = ["NAME", "state", "county", "tract", "population", "period"]
 
