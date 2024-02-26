@@ -3,13 +3,15 @@ from conversion_dics import age_conversion, educ_conversion, income_conversion
 from column_conversion import age_dictionary, educ_dictionary, income_dictionary, \
     ethnicity_dictionary, gender_dictionary, household_dictionary, race_dictionary
 from combination_dicts import age_categories, income_categories, household_categories
+from ..data_analysis.geomatching import TRACT_2000, TRACT_2010, TRACT_2020, \
+    COMM_AREAS, shape_matcher
 
 import pandas as pd
 
 
 # list of years and variables
 years = ["2005-2009", "2010-2014", "2015-2019", "2018-2022"]
-# dictionary of the datasets for a variable, and their conversion dictionary
+# dictionary of the datasets for a variable, and their conversion dictionaries
 # in a tuple
 variables = {
     "age": ([], age_dictionary, age_categories),
@@ -78,6 +80,19 @@ def fix_2005_2009_data(data: pd, variable_name: str):
             data = combine_columns(new, old, data)
     
     return data
+
+
+def tract_to_community(dataset, period):
+    """
+    Takes a dataset and combines the tracts into the community areas for 
+    that year
+    """
+
+    if period == "2005-2009":
+    
+    if period == "2010-2014" or period == "2015-2019":
+
+    if period == "2018-2022":
 
 
 def make_combined_datasets(variable_name: str, variable_tuple: tuple):
