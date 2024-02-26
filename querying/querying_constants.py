@@ -1,4 +1,4 @@
-from APIquery import make_pull, make_pull_2022
+# Tuples of constants for Census variable names
 
 gender_vars = ("NAME", "B01001_026E")
 
@@ -23,6 +23,7 @@ household_vars = ("NAME", "B19001_002E", "B19001_003E", "B19001_004E", "B19001_0
 
 ethnicity_vars = ("NAME", "B03001_002E", "B03001_003E")
 
+# Some years have different variables, so we have to grab year-specific ones
 age_2009_vars = ("NAME", "B01001_003E", "B01001_004E", "B01001_005E", "B01001_006E", 
                  "B01001_007E", "B01001_008E", "B01001_009E", "B01001_010E", 
                  "B01001_011E", "B01001_012E", "B01001_013E", "B01001_014E", 
@@ -36,6 +37,7 @@ age_2009_vars = ("NAME", "B01001_003E", "B01001_004E", "B01001_005E", "B01001_00
                  "B01001_043E", "B01001_044E", "B01001_045E", "B01001_046E", 
                  "B01001_047E", "B01001_048E", "B01001_049E")
 
+# Education 2009 is a combination of many, create lists and then tuples
 less_than = ["NAME", "B15001_004E", "B15001_005E", "B15001_012E", "B15001_013E", 
              "B15001_020E", "B15001_021E", "B15001_028E", "B15001_029E", 
              "B15001_036E", "B15001_037E", "B15001_045E", "B15001_046E", 
@@ -68,39 +70,3 @@ income_2009_vars = ("NAME", "B08119_002E", "B08119_003E", "B08119_004E", "B08119
 # Will be joined with respective datasets in cleaning
 population_0914 = ("NAME", "B01001_001E")
 population_1922 = ("NAME", "B01003_001E")
-
-make_pull(2019, gender_vars, "data/raw_data/2015-2019/gender_2015-2019.csv")
-make_pull(2019, race_vars, "data/raw_data/2015-2019/race_2015-2019.csv")
-make_pull(2019, age_vars, "data/raw_data/2015-2019/age_2015-2019.csv")
-make_pull(2019, educ_vars, "data/raw_data/2015-2019/educ_2015-2019.csv")
-make_pull(2019, income_vars, "data/raw_data/2015-2019/income_2015-2019.csv")
-make_pull(2019, household_vars, "data/raw_data/2015-2019/household_2015-2019.csv")
-make_pull(2019, ethnicity_vars, "data/raw_data/2015-2019/ethnicity_2015-2019.csv")
-make_pull(2019, population_1922, "data/raw_data/2015-2019/population_2015-2019.csv")
-
-make_pull(2014, gender_vars, "data/raw_data/2010-2014/gender_2010-2014.csv")
-make_pull(2014, race_vars, "data/raw_data/2010-2014/race_2010-2014.csv")
-make_pull(2014, age_vars, "data/raw_data/2010-2014/age_2010-2014.csv")
-make_pull(2014, educ_vars, "data/raw_data/2010-2014/educ_2010-2014.csv")
-make_pull(2014, income_vars, "data/raw_data/2010-2014/income_2010-2014.csv")
-make_pull(2014, household_vars, "data/raw_data/2010-2014/household_2010-2014.csv")
-make_pull(2014, ethnicity_vars, "data/raw_data/2010-2014/ethnicity_2010-2014.csv")
-make_pull(2014, population_0914, "data/raw_data/2010-2014/population_2010-2014.csv")
-
-make_pull(2009, gender_vars, "data/raw_data/2005-2009/gender_2005-2009.csv")
-make_pull(2009, race_vars, "data/raw_data/2005-2009/race_2005-2009.csv")
-make_pull(2009, age_2009_vars, "data/raw_data/2005-2009/age_2005-2009.csv")
-make_pull(2009, educ_2009_vars, "data/raw_data/2005-2009/educ_2005-2009.csv")
-make_pull(2009, income_2009_vars, "data/raw_data/2005-2009/income_2005-2009.csv")
-make_pull(2009, household_vars, "data/raw_data/2005-2009/household_2005-2009.csv")
-make_pull(2009, ethnicity_vars, "data/raw_data/2005-2009/ethnicity_2005-2009.csv")
-make_pull(2009, population_0914, "data/raw_data/2005-2009/population_2005-2009.csv")
-
-make_pull_2022(gender_vars, "data/raw_data/2018-2022/gender_2018-2022.csv")
-make_pull_2022(race_vars, "data/raw_data/2018-2022/race_2018-2022.csv")
-make_pull_2022(age_vars, "data/raw_data/2018-2022/age_2018-2022.csv")
-make_pull_2022(educ_vars, "data/raw_data/2018-2022/educ_2018-2022.csv")
-make_pull_2022(income_vars, "data/raw_data/2018-2022/income_2018-2022.csv")
-make_pull_2022(household_vars, "data/raw_data/2018-2022/household_2018-2022.csv")
-make_pull_2022(ethnicity_vars, "data/raw_data/2018-2022/ethnicity_2018-2022.csv")
-make_pull_2022(population_1922, "data/raw_data/2018-2022/population_2018-2022")
