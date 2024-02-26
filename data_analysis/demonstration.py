@@ -1,4 +1,4 @@
-from exploring_data import load_dataset, difference_between_years, find_top_k, detailed_top_k
+from exploring_data import load_dataset, find_top_k, detailed_top_k
 
 # Data entry
 
