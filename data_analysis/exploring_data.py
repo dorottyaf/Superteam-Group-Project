@@ -3,12 +3,14 @@ import pathlib
 
 EXCEPTION = ["NAME", "state", "county", "community_area", "population", "period"]
 
+
 def load_dataset(variable_name:str):
     dataset = variable_name + "_percentage_data.csv"
     filename = pathlib.Path(__file__).parent.parent / "data" / "clean_data" / dataset
     data = pd.read_csv(filename)
 
     return data
+
 
 def difference_between_years(dataframe:pd, period1:str, period2:str):
     """
@@ -28,7 +30,7 @@ def difference_between_years(dataframe:pd, period1:str, period2:str):
     # iterate through columns if they are not constants
     for col in dataframe.columns.difference(EXCEPTION):
         # Create a new column for differences
-        differences_df[col] = merged_df[col + "_period1"] - merged_df[col + "_period2"]
+        differences_df[col] = merged_df[col + "_period2"] - merged_df[col + "_period1"]
     
     absolute = differences_df.abs()
     
@@ -37,6 +39,7 @@ def difference_between_years(dataframe:pd, period1:str, period2:str):
     differences_df["community_area"] = merged_df["community_area"]
 
     return differences_df
+
 
 def find_top_k(dataframe: pd, period1: str, period2: str, variable: str, k:int):
 
@@ -48,6 +51,7 @@ def find_top_k(dataframe: pd, period1: str, period2: str, variable: str, k:int):
     # get the first k entries
     sorted_k_data = differences.head(k)
     return sorted_k_data
+
 
 def detailed_top_k(dataframe:str, period1: str, period2: str, variable: str,):
     """

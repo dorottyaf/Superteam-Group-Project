@@ -17,6 +17,7 @@ def biggest_change(dataset:str, period1: str, period2:str, num_results:int, colu
     
     return top_changes
 
+
 def top_k_change(k, column = "total_change"):
     """
     Find the top k biggest change between any two periods of time accross all
@@ -40,6 +41,7 @@ def top_k_change(k, column = "total_change"):
     
     return top_k_changes
 
+
 def readeable_change(k, column = "total_change"):
     """
     Takes the output of top_k_change and returns a string explaining the results
@@ -59,4 +61,4 @@ def readeable_change(k, column = "total_change"):
 
 
 
-readeable_change(10)
+readeable_change(4)
