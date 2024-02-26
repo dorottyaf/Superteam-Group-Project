@@ -3,6 +3,7 @@ from .column_conversion import age_dictionary, educ_dictionary, income_dictionar
     ethnicity_dictionary, gender_dictionary, household_dictionary, race_dictionary
 from .combination_dicts import age_categories, income_categories, household_categories
 
+
 # list of years and variables
 years = ["2005-2009", "2010-2014", "2015-2019", "2018-2022"]
 # dictionary of the datasets for a variable, and their conversion dictionaries

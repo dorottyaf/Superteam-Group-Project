@@ -1,4 +1,4 @@
-Community Area,NAME,0-25k,25-60k,60-100k,100-150k,150-200k,200k+,state,county,population,period
+community_area,NAME,0-25k,25-60k,60-100k,100-150k,150-200k,200k+,state,county,population,period
 ALBANY PARK,"Census Tract 1401, Cook County, Illinois",5117.0,5825.0,3368.0,1613.0,525.0,414.0,17,31,52657.0,2005-2009
 ARCHER HEIGHTS,"Census Tract 5701, Cook County, Illinois",875.0,1490.0,760.0,315.0,125.0,57.0,17,31,12315.0,2005-2009
 ARMOUR SQUARE,"Census Tract 3401, Cook County, Illinois",2325.0,1474.0,765.0,336.0,121.0,60.0,17,31,13735.0,2005-2009

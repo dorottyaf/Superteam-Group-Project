@@ -74,7 +74,7 @@ def drop_suburbs(dataset: pd):
 
    sorted_data = dataset.sort_values("tract")
    chicago_data = sorted_data[-77:]
-   chicago_data = chicago_data.rename(columns = {"tract" : "Community Area"})
+   chicago_data = chicago_data.rename(columns = {"tract" : "community_area"})
 
    return chicago_data
 
