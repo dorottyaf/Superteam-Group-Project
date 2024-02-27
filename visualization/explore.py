@@ -3,6 +3,7 @@ import geopandas as gpd
 import pathlib
 import seaborn as sns
 import matplotlib.pyplot as plt
+from ..data_analysis.geomatching import shape_matcher
 import pprint
 
 variables = ["age", "ethnicity", "household", "educ", "gender", "income", "race"]
@@ -16,6 +17,19 @@ educ_top_10 = []
 gender_top_10 = []
 inc_top_10 = []
 race_top_10 = []
+#Path Variables for shapefiles
+PATH_2000 = pathlib.Path(__file__).parent.parent / 'data_analysis' / "Location Information" / "Boundaries - Census Tracts - 2000" / "geo_export_c39c40c3-f0d6-44b1-b60d-c608f5f21ffe.shp" 
+PATH_2010 = pathlib.Path(__file__).parent.parent / 'data_analysis' / "Location Information" / "tl_2010_17_tract" / "tl_2018_17_tract.shp"
+PATH_2020 = pathlib.Path(__file__).parent.parent / 'data_analysis' / "Location Information" / "tl_2020_17_tract" / "tl_2020_17_tract.shp"
+PATH_ZIP = pathlib.Path(__file__).parent.parent / 'data_analysis' / "Location Information" / "Boundaries - ZIP Codes" / "geo_export_0ee546b2-a3fb-4bdb-8cc1-febaad94a4d8.shp"
+
+COMM_AREAS = pathlib.Path(__file__).parent.parent / 'data_analysis' / "Location Information" / "Boundaries - Community Areas (current)" / "geo_export_8fac6090-b29a-4cf4-b6ab-c66b0d4da44a.shp" 
+
+#Name, Path Tuples used to run shape_matcher
+TRACT_2000 = ("census_tra", PATH_2000,) 
+TRACT_2010 = ("TRACTCE", PATH_2010,)
+TRACT_2020 = ("TRACTCE", PATH_2020,)
+ZIP_CODES =  ("zip", PATH_ZIP,)
 
 
 def load_data(name:str):
@@ -75,6 +89,8 @@ for var in variables:
 
 
 cook_tract = get_cook_shape()
+comm_dict = shape_matcher(TRACT_2000, COMM_AREAS)
+print(comm_dict)
 for var in variables:
     df = load_data(var)
     df["GEOID"] = df['state'].astype(str) + '0' + df['county'].astype(str) + df['tract'].astype(str)
