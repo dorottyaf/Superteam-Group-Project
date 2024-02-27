@@ -1,6 +1,6 @@
 import pandas as pd
 import pathlib
-from .cleaning import variables
+
 
 EXCLUDE = ["NAME", "state", "county", "tract", "population", "period"]
 
@@ -27,16 +27,14 @@ def calculate_percentage(dataframe: pd, column_name: str):
     """
     Calculates the proportions for one column
     """
-
     dataframe[column_name] = dataframe[column_name] / dataframe["population"]
 
     return dataframe
 
-def make_percentage_files():
+def make_percentage_files(variables):
     """
     Create the percentage files based on the clean datasets
     """
-
     for variable in variables:
         data = load_in_dataframe(variable)
         data = create_percentage_data(data)
@@ -45,4 +43,3 @@ def make_percentage_files():
         filename = pathlib.Path(__file__).parent / "clean_data" / name
         data.to_csv(filename)
 
-make_percentage_files()

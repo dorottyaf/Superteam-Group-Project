@@ -60,6 +60,7 @@ def tract_to_community(dataset:pd, tract_dictionary:dict):
    for community, tracts in tract_dictionary.items():
       for tract in tracts:
          dataset.replace({"tract": {tract : community}}, inplace = True)
+
    dataset = dataset.groupby("tract").agg(custom_agg).reset_index()
     
    return dataset
