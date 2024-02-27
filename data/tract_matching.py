@@ -1,6 +1,5 @@
 from data_analysis.geomatching import TRACT_2000, TRACT_2010, TRACT_2020, \
    COMM_AREAS, shape_matcher
-import pathlib
 import pandas as pd
 
 tracts_2000 = shape_matcher(TRACT_2000, COMM_AREAS)
