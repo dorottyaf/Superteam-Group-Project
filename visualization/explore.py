@@ -20,7 +20,7 @@ race_top_10 = []
 
 def load_data(name:str):
     csv_name = name + "_percentage_data.csv"
-    filename = pathlib.Path(__file__).parent.parent / "data" / "clean_data" / csv_name
+    filename = pathlib.Path(__file__).parent.parent / "data" / "clean_data" / "tract_based" /  csv_name
     data = pd.read_csv(filename)
     return data
 
@@ -34,7 +34,7 @@ def get_cook_shape():
     cook_tract = il_tract[mask]
     return cook_tract
 
-
+'''
 # for exporatory, getting tracts with greatest changes for each of 7 variables
 for var in variables:
     df = load_data(var)
@@ -71,6 +71,7 @@ for var in variables:
                 direc = pathlib.Path(__file__).parent / 'temp_graphs' / png_name
                 plt.savefig(direc)
                 plt.clf()
+                '''
 
 
 cook_tract = get_cook_shape()
