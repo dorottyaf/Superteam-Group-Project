@@ -28,6 +28,36 @@ def get_chi_shape():
     # mask for only cook county
     return chi_comm
 
+def make_a_plot(df_sub, p1, p2, dem):
+    period = p1
+    df_plot = df_sub[df_sub['period'] == period]
+    df_plot = gpd.GeoDataFrame(df_plot)
+    fig, (ax1,ax2) = plt.subplots(1, 2, figsize = (20, 10))
+    df_plot.plot(column = dem,
+                ax = ax1,
+                cmap = "RdPu",
+                legend = True)
+    plt.style.use('bmh')
+    ax1.set_title('Percentage of Population that is ' + dem.capitalize() + ' by Community Area for ' + period, fontdict = {'fontsize': '15', 'fontweight' : '3'})
+
+    period = p2
+    df_plot = df_sub[df_sub['period'] == period]
+    df_plot = gpd.GeoDataFrame(df_plot)
+    df_plot.plot(column = dem,
+                ax = ax2,
+                cmap = "RdPu",
+                legend = True)
+    plt.style.use('bmh')
+    ax2.set_title('Percentage of Population that is ' + dem.capitalize() + ' by Community Area for ' + period, fontdict = {'fontsize': '15', 'fontweight' : '3'})
+    ax1.axis('off')
+    ax2.axis('off')
+    png_name = dem + '_' + p1 + '_' + p2 + '.png'
+    direc = pathlib.Path(__file__).parent / 'temp_graphs' / png_name
+    plt.savefig(direc)
+    
+
+
+
 
 
 #get cook shape file
@@ -45,25 +75,56 @@ df = df.rename(columns={'community_area' : 'community'})
 df_merge = df.merge(chi_comm, on= 'community', how= 'left')
 df_sub = df_merge.drop(columns= COLS_TO_DROP3)
 
-# doing just one period
+# making the plots
+make_a_plot(df_sub, '2005-2009', '2010-2014', "black")
+make_a_plot(df_sub, '2005-2009', '2010-2014', "white")
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
 period = '2005-2009'
 df_plot = df_sub[df_sub['period'] == period]
 df_plot = gpd.GeoDataFrame(df_plot)
 print(df_plot)
 
 # Create subplots
-fig, ax = plt.subplots(1, 1, figsize = (20, 10))
+fig, (ax1,ax2) = plt.subplots(1, 2, figsize = (20, 10))
 df_plot.plot(column = "white",
-                ax = ax,
+                ax = ax1,
                 cmap = "RdPu",
                 legend = True)
 # Stylize plots
 plt.style.use('bmh')
 
 # Set title
-ax.set_title('Percentage of Population that is White by Tract for ' + period, fontdict = {'fontsize': '25', 'fontweight' : '3'})
-plt.show()
+ax1.set_title('Percentage of Population that is White by Community Area for ' + period, fontdict = {'fontsize': '15', 'fontweight' : '3'})
+# plt.show()
+
 
 period = '2010-2014'
 df_plot = df_sub[df_sub['period'] == period]
@@ -71,19 +132,58 @@ df_plot = gpd.GeoDataFrame(df_plot)
 print(df_plot)
 
 # Create subplots
-fig, ax = plt.subplots(1, 1, figsize = (20, 10))
+# fig, ax = plt.subplots(1, 1, figsize = (20, 10))
 df_plot.plot(column = "white",
-                ax = ax,
+                ax = ax2,
                 cmap = "RdPu",
                 legend = True)
 # Stylize plots
 plt.style.use('bmh')
 
 # Set title
-ax.set_title('Percentage of Population that is White by Tract for ' + period, fontdict = {'fontsize': '25', 'fontweight' : '3'})
+ax2.set_title('Percentage of Population that is White by Community Area for ' + period, fontdict = {'fontsize': '15', 'fontweight' : '3'})
+plt.show()
+
+
+
+period = '2005-2009'
+df_plot = df_sub[df_sub['period'] == period]
+df_plot = gpd.GeoDataFrame(df_plot)
+print(df_plot)
+
+# Create subplots
+fig, (ax1,ax2) = plt.subplots(1, 2, figsize = (20, 10))
+df_plot.plot(column = "black",
+                ax = ax1,
+                cmap = "RdPu",
+                legend = True)
+# Stylize plots
+plt.style.use('bmh')
+
+# Set title
+ax1.set_title('Percentage of Population that is Black by Community Area for ' + period, fontdict = {'fontsize': '15', 'fontweight' : '3'})
+# plt.show()
+
+
+period = '2010-2014'
+df_plot = df_sub[df_sub['period'] == period]
+df_plot = gpd.GeoDataFrame(df_plot)
+print(df_plot)
+
+# Create subplots
+# fig, ax = plt.subplots(1, 1, figsize = (20, 10))
+df_plot.plot(column = "black",
+                ax = ax2,
+                cmap = "RdPu",
+                legend = True)
+# Stylize plots
+plt.style.use('bmh')
+
+# Set title
+ax2.set_title('Percentage of Population that is Black by Community Area for ' + period, fontdict = {'fontsize': '15', 'fontweight' : '3'})
 plt.show()
 plt.clf()
-
+"""
 
 
 
