@@ -3,8 +3,6 @@ import geopandas as gpd
 import pathlib
 import seaborn as sns
 import matplotlib.pyplot as plt
-from data_analysis.geomatching import TRACT_2000, TRACT_2010, TRACT_2020, \
-   COMM_AREAS, shape_matcher
 from pprint import pprint
 
 variables = ["age", "ethnicity", "household", "educ", "gender", "income", "race"]
@@ -59,29 +57,34 @@ def make_a_plot(df_sub, p1, p2, dem):
 
 
 
+def given_values_make_plot(variable, per1, per2):
+    #get cook shape file
+    chi_comm = get_chi_shape()
 
-#get cook shape file
-chi_comm = get_chi_shape()
+    # pick a variable and load in the data
+    df = load_data(variable)
 
-# pick a variable and load in the data
-var = 'income'
-df = load_data(var)
+    # cleaning up columns, changing column name for matching
+    df = df.drop(columns= COLS_TO_DROP2)
+    df = df.rename(columns={'community_area' : 'community'})
 
-# cleaning up columns, changing column name for matching
-df = df.drop(columns= COLS_TO_DROP2)
-df = df.rename(columns={'community_area' : 'community'})
+    # merging on column, cleaning up extra columns once again
+    df_merge = df.merge(chi_comm, on= 'community', how= 'left')
+    df_sub = df_merge.drop(columns= COLS_TO_DROP3)
+    print(df_sub.columns)
 
-# merging on column, cleaning up extra columns once again
-df_merge = df.merge(chi_comm, on= 'community', how= 'left')
-df_sub = df_merge.drop(columns= COLS_TO_DROP3)
-print(df_sub.columns)
+    # making the plots
+    for col in df_sub.columns:
+        if col != 'community' and col != 'geometry' and col != 'period':
+            make_a_plot(df_sub, per1, per2, col)
 
 
-for col in df_sub.columns:
-    if col != 'community' and col != 'geometry' and col != 'period':
-        make_a_plot(df_sub, '2005-2009', '2010-2014', col)
+given_values_make_plot('income', '2010-2014', '2015-2019')
 
-# making the plots
+
+
+
+
 '''
 make_a_plot(df_sub, '2005-2009', '2010-2014', "black")
 make_a_plot(df_sub, '2005-2009', '2010-2014', "white")
