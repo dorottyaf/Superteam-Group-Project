@@ -74,10 +74,18 @@ df = df.rename(columns={'community_area' : 'community'})
 # merging on column, cleaning up extra columns once again
 df_merge = df.merge(chi_comm, on= 'community', how= 'left')
 df_sub = df_merge.drop(columns= COLS_TO_DROP3)
+print(df_sub.columns)
+
+
+for col in df_sub.columns:
+    if col != 'community' and col != 'geometry' and col != 'period':
+        make_a_plot(df_sub, '2005-2009', '2010-2014', col)
 
 # making the plots
+'''
 make_a_plot(df_sub, '2005-2009', '2010-2014', "black")
 make_a_plot(df_sub, '2005-2009', '2010-2014', "white")
+'''
 
 
 
