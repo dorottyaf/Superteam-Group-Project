@@ -64,7 +64,7 @@ def make_a_plot(df_sub, p1, p2, dem):
 chi_comm = get_chi_shape()
 
 # pick a variable and load in the data
-var = 'race'
+var = 'income'
 df = load_data(var)
 
 # cleaning up columns, changing column name for matching
