@@ -1,11 +1,18 @@
-# Superteam-Group-Project
+# Change in Chicago: Analysis and Visualizations (CAPP 30122 Winter 2024)
+## Echo Nattinger, Paul Soltys, Dorka Frisch, and Andrew Baker
 
-Meetings: Wednesdays @12:30 
+This project studies demographic change in Chicago community areas in relationship with fluctuations in the housing and economic markets. Specifically, the goal of this project was to study the biggest demographic shifts in Chicago and study potential causes behind those changes. To this end, we gathered demographic data using the United States Census American Community Survey (ACS) API and housing/economic data from a number of secondary sources, including the DePaul Housing Institute, the City of Chicago, and the Law Center for Better Housing. 
 
-Useful links:
+Using a fuzzy geomatching algorithm, we grouped our tract-level Census data into community area data. When run as an app, this project allows a user to study the biggest demographic shifts out of all Chicago neighborhoods, visualize these changes, and investigate contemperaneous change in housing or economic measurements. 
 
-Drive:
-https://drive.google.com/drive/folders/1I6Y4dfAtyIN3EcRf0Kg3sB3STlgfRGxd?usp=drive_link
+To run this project on your own machine, complete the following steps: 
 
-Write-up:
-https://docs.google.com/document/d/1FZlPIIQtHgwkhGdAtTlHY1hNuT5V5aphjSIX8YSU7j8/edit?usp=sharing
+1) Clone the repository onto your own machine
+
+2) Run poetry shell
+
+3) Run poetry install
+
+4) Run the following command
+
+_This product uses the Census Bureau Data API but is not endorsed or certified by the Census Bureau._
