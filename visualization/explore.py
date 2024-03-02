@@ -79,7 +79,7 @@ def given_values_make_plot(variable, per1, per2):
             make_a_plot(df_sub, per1, per2, col)
 
 
-given_values_make_plot('income', '2010-2014', '2015-2019')
+# given_values_make_plot('income', '2010-2014', '2015-2019')
 
 
 
