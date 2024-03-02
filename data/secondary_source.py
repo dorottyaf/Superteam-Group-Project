@@ -24,15 +24,15 @@ def city_blc_clean():
     city_blc_path = pathlib.Path(__file__).parent / "raw_data" / "Secondary Data" / "Business_Licenses_20240217.csv"
     blc_df = pd.read_csv(city_blc_path)
 
-    blc_df["APPLICATION_START_DATE"] = blc_df["APPLICATION CREATED DATE"].astype(str)
-    blc_df["APPLICATION_START_DATE"] = blc_df["APPLICATION CREATED DATE"].apply(date_clean)
-    blc_df = blc_df.drop(blc_df[blc_df.APPLICATION_START_DATE == "rm"].index)
+    blc_df["APPLICATION CREATED DATE"] = blc_df["APPLICATION CREATED DATE"].astype(str)
+    blc_df["APPLICATION CREATED DATE"] = blc_df["APPLICATION CREATED DATE"].apply(date_clean)
+    blc_df = blc_df.drop(blc_df[blc_df.APPLICATION CREATED DATE == "rm"].index)
 
     data_years = set(blc_df["APPLICATION CREATED DATE"])
     counts_dict = {}
 
     for year in data_years:
-        year_df = blc_df[blc_df["APPLICATION_START_DATE"] == year]
+        year_df = blc_df[blc_df["APPLICATION CREATED DATE"] == year]
         area_counts = year_df["ZIP CODE"].value_counts()
         for area in area_counts.index:
             key = str(year + ", " + str(area))
