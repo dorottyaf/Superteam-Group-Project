@@ -62,7 +62,7 @@ def secondary_text(secondary_data:str, period1:str, period2:str, community:str):
         column = period1 + " to " + period2
         change = depaul.loc[depaul["community_area"] == community, column].values[0]
 
-        return f"and the change in the DePaul index was {change}"
+        return f" and the change in the DePaul index was {change}"
         
 
 
@@ -111,4 +111,4 @@ def readable_change_complex(k, variable, column = "total_change", secondary = Fa
 
 
 readable_change_simple(10, secondary="depaul")
-# readable_change_complex(10, "household")
+readable_change_complex(10, "household")
