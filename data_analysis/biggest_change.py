@@ -101,14 +101,20 @@ def readable_change_complex(k, variable, column = "total_change", secondary = Fa
         text = f"The top {k} changes in the {column} category for the {variable} variable were:"
     
     change_info_list = []
+    indexed_list = []
+    i = 0
+
     for __, determinants in top_changes.items():
+        i += 1
         change_text = f"In {determinants[0]} between {determinants[2][0]} and {determinants[2][1]}"
+        indexed_list.append((i, determinants[0], determinants[2][0], determinants[2][1]))
         change_info_list.append(change_text)
     
     print(text)
     for index, message in enumerate(change_info_list):
         print (f"{index + 1} {message}")
-
+    
+    return indexed_list
 
 # readable_change_simple(10, secondary="depaul")
 # readable_change_complex(10, "household")
