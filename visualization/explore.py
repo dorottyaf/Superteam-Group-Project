@@ -50,7 +50,7 @@ def make_a_plot(df_sub, p1, p2, dem):
     ax1.axis('off')
     ax2.axis('off')
     png_name = dem + '_' + p1 + '_' + p2 + '.png'
-    direc = pathlib.Path(__file__).parent / 'temp_graphs' / png_name
+    direc = pathlib.Path(__file__).parent / 'finished_graphs' / png_name
     plt.savefig(direc)
     
 
@@ -78,8 +78,14 @@ def given_values_make_plot(variable, per1, per2):
         if col != 'community' and col != 'geometry' and col != 'period':
             make_a_plot(df_sub, per1, per2, col)
 
+def run():
+    # ask the user what they want to see
+    variable = input('What variable ("age", "ethnicity", "household", "educ", "gender", "income", "race") would you like to see?')
+    per1 = input('What period (2005-2009, 2010-2014, 2015-2019, 2018-2022) would you like to start with?')
+    per2 = input('What period (2005-2009, 2010-2014, 2015-2019, 2018-2022) would you like to end with?')
 
-# given_values_make_plot('income', '2010-2014', '2015-2019')
+
+    given_values_make_plot(variable, per1, per2)
 
 
 
