@@ -1,5 +1,19 @@
 from APIquery import make_pull, make_pull_2022
-from querying_constants import gender_vars, race_vars, age_vars, educ_vars, income_vars, household_vars, ethnicity_vars, population_1922, population_0914, age_2009_vars, income_2009_vars, educ_2009_vars
+# Import our list of census variables
+from querying_constants import (
+    gender_vars,
+    race_vars,
+    age_vars,
+    educ_vars,
+    income_vars,
+    household_vars,
+    ethnicity_vars,
+    population_1922,
+    population_0914,
+    age_2009_vars,
+    income_2009_vars,
+    educ_2009_vars,
+)
 
 # NOTE: Not a function because variable arguments change year by year
 make_pull(2019, gender_vars, "data/raw_data/2015-2019/gender_2015-2019.csv")
