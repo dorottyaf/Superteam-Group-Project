@@ -1,7 +1,8 @@
 import pathlib
 import pandas as pd
-import geopandas as gpd
+import json
 import re
+
 
 # Note that most of these datasets have year limitations tighter than ACS Data
 # Business License and Building Permit groupings cut down locally to shareable
@@ -36,6 +37,9 @@ def city_blc_clean():
         for area in area_counts.index:
             key = str(year + ", " + str(area))
             counts_dict[key] = area_counts[area]
+    #Need to add proper filepath
+    with open("raw_data\Secondary Data\license_clean.json", "w") as readout:
+        json.dump(counts_dict, readout)
 
     return counts_dict #Need to print to a csv somewhere, perhaps.
 
@@ -67,6 +71,10 @@ def city_permit_clean():
         for area in area_counts.index:
             key = str(year + ", " + str(area))
             counts_dict[key] = area_counts[area]
+
+    # need to add proper filepath
+    with open("raw_data\Secondary Data\permit_clean.json", "w") as readout:
+        json.dump(counts_dict, readout)
 
     return counts_dict #Need to print to a csv somewhere, perhaps.
 
@@ -103,5 +111,8 @@ def date_clean(date):
         date_year_num = int(date)
         if date_year_num < 2005 or date_year_num > 2023:
             date = "rm"
-
+ 
     return date
+
+test_dict = city_blc_clean()
+test_dict2 = city_permit_clean()

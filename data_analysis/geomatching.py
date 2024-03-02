@@ -59,3 +59,5 @@ def shape_matcher(small_name, large_name):
                 break
 
     return comm_area_dict
+
+print(shape_matcher(TRACT_2000, COMM_AREAS))
