@@ -1,5 +1,6 @@
 from exploring_data import load_dataset, find_top_k
 import pandas as pd
+import pathlib
 
 VARIABLES = ["income", "age", "educ", "ethnicity", "gender", "household", "race"]
 PERIODS = [("2005-2009", "2010-2014"),("2010-2014", "2015-2019"), \
@@ -47,7 +48,25 @@ def top_k_change(k, column = "total_change", concrete = (False, "")):
     return top_k_changes
 
 
-def readable_change_simple(k, column = "total_change"):
+def secondary_text(secondary_data:str, period1:str, period2:str, community:str):
+    """
+    Get the info on whether the secondary data change in the time period was
+    low, medium, or high
+    """
+
+    if secondary_data == "depaul":
+        # load data
+        filename = pathlib.Path(__file__).parent.parent / "data" / "clean_data" / "Secondary Data" / "IHS_DePaul_Index.csv"
+        depaul = pd.read_csv(filename)
+
+        column = period1 + " to " + period2
+        change = depaul.loc[depaul["community_area"] == community, column].values[0]
+
+        return f"and the change in the DePaul index was {change}"
+        
+
+
+def readable_change_simple(k, column = "total_change", secondary = False):
     """
     Takes the output of top_k_change and returns a string explaining the results
     """
@@ -58,6 +77,8 @@ def readable_change_simple(k, column = "total_change"):
     change_info_list = []
     for __, determinants in top_changes.items():
         change_text = f"In {determinants[0]} in the {determinants[1]} variable between {determinants[2][0]} and {determinants[2][1]}"
+        if secondary:
+            change_text = change_text + secondary_text(secondary,determinants[2][0], determinants[2][1], determinants[0])
         change_info_list.append(change_text)
     
     print(text)
@@ -65,7 +86,7 @@ def readable_change_simple(k, column = "total_change"):
         print (f"{index + 1} {message}")
 
 
-def readable_change_complex(k, variable, column = "total_change"):
+def readable_change_complex(k, variable, column = "total_change", secondary = False):
     """
     Takes the output of top_k_change when we are looking for changes in a 
     specific variable and prints out the results
@@ -89,5 +110,5 @@ def readable_change_complex(k, variable, column = "total_change"):
         print (f"{index + 1} {message}")
 
 
-# readable_change_simple(10)
-readable_change_complex(10, "household")
+readable_change_simple(10, secondary="depaul")
+# readable_change_complex(10, "household")
