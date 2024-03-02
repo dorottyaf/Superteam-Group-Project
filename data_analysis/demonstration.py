@@ -1,4 +1,4 @@
-from exploring_data import load_dataset, difference_between_years, find_top_k, detailed_top_k
+from exploring_data import load_dataset, find_top_k, detailed_top_k
 
 # Data entry
 
@@ -13,4 +13,4 @@ def explore(dataset:str, period1: str, period2:str, num_results:int, column = "t
         for r in result:
             print(r)
 
-explore("income", "2010-2014", "2015-2019", 20)
+explore("household", "2015-2019", "2018-2022", 1)

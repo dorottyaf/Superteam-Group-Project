@@ -3,38 +3,211 @@ import geopandas as gpd
 import pathlib
 import seaborn as sns
 import matplotlib.pyplot as plt
-import pprint
+from pprint import pprint
 
 variables = ["age", "ethnicity", "household", "educ", "gender", "income", "race"]
 COLS_TO_DROP = ['NAME', 'state', 'county', 'tract', 'population', 'period']
-COLS_TO_DROP2 = ['NAME', 'state', 'county', 'tract', 'population']
-COLS_TO_DROP3 = ['COUNTYFP', 'NAME', 'NAMELSAD', 'MTFCC', 'FUNCSTAT', 'ALAND', 'AWATER', 'INTPTLAT', 'INTPTLON']
-age_top_10 = [835700, 611800, 834600, 670100, 251700, 835600, 690500, 380500, 830201, 841400]
-eth_top_10 = [611700, 243000, 310400, 841600, 240800, 230600, 843400, 220400, 832400, 10702]
-hh_top_10 = []
-educ_top_10 = []
-gender_top_10 = []
-inc_top_10 = []
-race_top_10 = []
+COLS_TO_DROP2 = ['NAME', 'state', 'county', 'population']
+COLS_TO_DROP3 = ['area', 'area_num_1', 'area_numbe', 'comarea', 'comarea_id', 'perimeter', 'shape_area', 'shape_len']
 
-
+# given a variable name, load in corresponding percentage data
 def load_data(name:str):
     csv_name = name + "_percentage_data.csv"
     filename = pathlib.Path(__file__).parent.parent / "data" / "clean_data" / csv_name
     data = pd.read_csv(filename)
     return data
 
+# getting the shape file for community areas in chicago
+def get_chi_shape():
+    shp_file = "Boundaries - Community Areas (current)"
+    shp_file_path = pathlib.Path(__file__).parent.parent / "data_analysis" / 'Location Information' / shp_file
+    chi_comm = gpd.read_file(shp_file_path)
+    chi_comm = chi_comm.to_crs(epsg = 32617)
+    # mask for only cook county
+    return chi_comm
 
-def get_cook_shape():
-    shp_file = "tl_rd22_17_tract.zip"
-    shp_file_path = pathlib.Path(__file__).parent / "shapes" / shp_file
-    il_tract = gpd.read_file(shp_file_path)
-    il_tract = il_tract.to_crs(epsg = 32617)
-    mask = il_tract['COUNTYFP'] == '031'
-    cook_tract = il_tract[mask]
-    return cook_tract
+def make_a_plot(df_sub, p1, p2, dem):
+    period = p1
+    df_plot = df_sub[df_sub['period'] == period]
+    df_plot = gpd.GeoDataFrame(df_plot)
+    fig, (ax1,ax2) = plt.subplots(1, 2, figsize = (20, 10))
+    df_plot.plot(column = dem,
+                ax = ax1,
+                cmap = "RdPu",
+                legend = True)
+    plt.style.use('bmh')
+    ax1.set_title('Percentage of Population that is ' + dem.capitalize() + ' by Community Area for ' + period, fontdict = {'fontsize': '15', 'fontweight' : '3'})
+
+    period = p2
+    df_plot = df_sub[df_sub['period'] == period]
+    df_plot = gpd.GeoDataFrame(df_plot)
+    df_plot.plot(column = dem,
+                ax = ax2,
+                cmap = "RdPu",
+                legend = True)
+    plt.style.use('bmh')
+    ax2.set_title('Percentage of Population that is ' + dem.capitalize() + ' by Community Area for ' + period, fontdict = {'fontsize': '15', 'fontweight' : '3'})
+    ax1.axis('off')
+    ax2.axis('off')
+    png_name = dem + '_' + p1 + '_' + p2 + '.png'
+    direc = pathlib.Path(__file__).parent / 'temp_graphs' / png_name
+    plt.savefig(direc)
+    
 
 
+
+
+def given_values_make_plot(variable, per1, per2):
+    #get cook shape file
+    chi_comm = get_chi_shape()
+
+    # pick a variable and load in the data
+    df = load_data(variable)
+
+    # cleaning up columns, changing column name for matching
+    df = df.drop(columns= COLS_TO_DROP2)
+    df = df.rename(columns={'community_area' : 'community'})
+
+    # merging on column, cleaning up extra columns once again
+    df_merge = df.merge(chi_comm, on= 'community', how= 'left')
+    df_sub = df_merge.drop(columns= COLS_TO_DROP3)
+    print(df_sub.columns)
+
+    # making the plots
+    for col in df_sub.columns:
+        if col != 'community' and col != 'geometry' and col != 'period':
+            make_a_plot(df_sub, per1, per2, col)
+
+
+# given_values_make_plot('income', '2010-2014', '2015-2019')
+
+
+
+
+
+'''
+make_a_plot(df_sub, '2005-2009', '2010-2014', "black")
+make_a_plot(df_sub, '2005-2009', '2010-2014', "white")
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+period = '2005-2009'
+df_plot = df_sub[df_sub['period'] == period]
+df_plot = gpd.GeoDataFrame(df_plot)
+print(df_plot)
+
+# Create subplots
+fig, (ax1,ax2) = plt.subplots(1, 2, figsize = (20, 10))
+df_plot.plot(column = "white",
+                ax = ax1,
+                cmap = "RdPu",
+                legend = True)
+# Stylize plots
+plt.style.use('bmh')
+
+# Set title
+ax1.set_title('Percentage of Population that is White by Community Area for ' + period, fontdict = {'fontsize': '15', 'fontweight' : '3'})
+# plt.show()
+
+
+period = '2010-2014'
+df_plot = df_sub[df_sub['period'] == period]
+df_plot = gpd.GeoDataFrame(df_plot)
+print(df_plot)
+
+# Create subplots
+# fig, ax = plt.subplots(1, 1, figsize = (20, 10))
+df_plot.plot(column = "white",
+                ax = ax2,
+                cmap = "RdPu",
+                legend = True)
+# Stylize plots
+plt.style.use('bmh')
+
+# Set title
+ax2.set_title('Percentage of Population that is White by Community Area for ' + period, fontdict = {'fontsize': '15', 'fontweight' : '3'})
+plt.show()
+
+
+
+period = '2005-2009'
+df_plot = df_sub[df_sub['period'] == period]
+df_plot = gpd.GeoDataFrame(df_plot)
+print(df_plot)
+
+# Create subplots
+fig, (ax1,ax2) = plt.subplots(1, 2, figsize = (20, 10))
+df_plot.plot(column = "black",
+                ax = ax1,
+                cmap = "RdPu",
+                legend = True)
+# Stylize plots
+plt.style.use('bmh')
+
+# Set title
+ax1.set_title('Percentage of Population that is Black by Community Area for ' + period, fontdict = {'fontsize': '15', 'fontweight' : '3'})
+# plt.show()
+
+
+period = '2010-2014'
+df_plot = df_sub[df_sub['period'] == period]
+df_plot = gpd.GeoDataFrame(df_plot)
+print(df_plot)
+
+# Create subplots
+# fig, ax = plt.subplots(1, 1, figsize = (20, 10))
+df_plot.plot(column = "black",
+                ax = ax2,
+                cmap = "RdPu",
+                legend = True)
+# Stylize plots
+plt.style.use('bmh')
+
+# Set title
+ax2.set_title('Percentage of Population that is Black by Community Area for ' + period, fontdict = {'fontsize': '15', 'fontweight' : '3'})
+plt.show()
+plt.clf()
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 # for exporatory, getting tracts with greatest changes for each of 7 variables
 for var in variables:
     df = load_data(var)
@@ -71,36 +244,4 @@ for var in variables:
                 direc = pathlib.Path(__file__).parent / 'temp_graphs' / png_name
                 plt.savefig(direc)
                 plt.clf()
-
-
-cook_tract = get_cook_shape()
-for var in variables:
-    df = load_data(var)
-    df["GEOID"] = df['state'].astype(str) + '0' + df['county'].astype(str) + df['tract'].astype(str)
-    df = df.drop(columns= COLS_TO_DROP2)
-    df_merge = df.merge(cook_tract, on= 'GEOID', how= 'left')
-    df_sub = df_merge.drop(columns= COLS_TO_DROP3)
-    # doing just one period
-    df_sub = df_sub[df_sub['period'] == '2005-2009']
-    df_sub = gpd.GeoDataFrame(df_sub)
-    if var == 'race':
-        print(cook_tract.head(2))
-        print('Shape, ', cook_tract.shape)
-        print("\nThe shapefile projection is: {}".format(cook_tract.crs))
-        print(df)
-        print(df_merge)
-        print(df_sub)
-        print(df_sub.columns)
-        # Create subplots
-        fig, ax = plt.subplots(1, 1, figsize = (20, 10))
-        df_sub.plot(column = "white",
-                       ax = ax,
-                       cmap = "RdPu",
-                       legend = True)
-        # Stylize plots
-        plt.style.use('bmh')
-
-        # Set title
-        ax.set_title('Percentage of Population that is White by Tract for 2005-2009', fontdict = {'fontsize': '25', 'fontweight' : '3'})
-        plt.show()
-        plt.clf()
+                '''
