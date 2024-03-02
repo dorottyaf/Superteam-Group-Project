@@ -45,6 +45,8 @@ def make_a_plot(df_sub, p1, p2, dem):
                 ax = ax2,
                 cmap = "RdPu",
                 legend = True)
+    comm_area = df_plot[df_plot['community'] == 'BURNSIDE']
+    comm_area.boundary.plot(color='red', linewidth = 2)
     plt.style.use('bmh')
     ax2.set_title('Percentage of Population that is ' + dem.capitalize() + ' by Community Area for ' + period, fontdict = {'fontsize': '15', 'fontweight' : '3'})
     ax1.axis('off')
