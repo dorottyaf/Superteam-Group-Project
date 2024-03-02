@@ -7,12 +7,18 @@ Using a fuzzy geomatching algorithm, we grouped our tract-level Census data into
 
 To run this project on your own machine, complete the following steps: 
 
-1) Clone the repository onto your own machine
+Note: This project requires poetry to be installed 
 
-2) Run poetry shell
+1) Ensure [poetry is installed on your local machine](https://python-poetry.org/docs/)
 
-3) Run poetry install
+2) Clone the repository onto your own machine using `git clone git@github.com:dorottyaf/Superteam-Group-Project.git` (SSH) or `git clone https://github.com/dorottyaf/Superteam-Group-Project.git` (HTTPS)
 
-4) Run the following command
+3) Run `poetry shell`
+
+4) Run `poetry install`
+
+5) To initiate the app, run `poetry run py`
+
+6) Follow the prompts given to you by the app. Explore the change in Chicago demographics, investigate local changes in housing markets, and visualize to your heart's content!
 
 _This product uses the Census Bureau Data API but is not endorsed or certified by the Census Bureau._
