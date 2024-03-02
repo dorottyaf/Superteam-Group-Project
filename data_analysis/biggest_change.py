@@ -1,8 +1,8 @@
 from exploring_data import load_dataset, find_top_k
 import pandas as pd
 
-variables = ["income", "age", "educ", "ethnicity", "gender", "household", "race"]
-periods = [("2005-2009", "2010-2014"),("2010-2014", "2015-2019"), \
+VARIABLES = ["income", "age", "educ", "ethnicity", "gender", "household", "race"]
+PERIODS = [("2005-2009", "2010-2014"),("2010-2014", "2015-2019"), \
            ("2015-2019", "2018-2022"), ("2005-2009", "2018-2022")]
 
 
@@ -27,13 +27,13 @@ def top_k_change(k, column = "total_change", concrete = (False, "")):
     """
 
     changes = {}
-    variable_list = variables
+    variable_list = VARIABLES
 
     if concrete[0]:
         variable_list = [concrete[1]]
 
     for variable in variable_list:
-        for period1, period2 in periods:
+        for period1, period2 in PERIODS:
             k_changes = biggest_change(variable, period1, period2, k, column)
             for __, row in k_changes.iterrows():
                 changes[row[column]] = (row["community_area"], variable, (period1, period2))
@@ -64,6 +64,7 @@ def readable_change_simple(k, column = "total_change"):
     for index, message in enumerate(change_info_list):
         print (f"{index + 1} {message}")
 
+
 def readable_change_complex(k, variable, column = "total_change"):
     """
     Takes the output of top_k_change when we are looking for changes in a 
@@ -87,5 +88,6 @@ def readable_change_complex(k, variable, column = "total_change"):
     for index, message in enumerate(change_info_list):
         print (f"{index + 1} {message}")
 
-readable_change_simple(10)
-readable_change_complex(10, "income", "0-15k")
+
+# readable_change_simple(10)
+readable_change_complex(10, "household")
