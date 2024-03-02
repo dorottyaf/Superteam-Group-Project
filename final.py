@@ -21,8 +21,19 @@ def run():
     is_graph = int(is_graph)
     for change in lst_of_changes:
         if change[0] == is_graph:
-            given_values_make_plot(variable, change[2], change[1], change[2])
+            given_values_make_plot(variable, change[2], change[3], change[1])
     print("Cool! Your graphs are in visualization/finished_graphs")
 
+    is_secondary = input("Would you like to explore how a secondary data changes along the changes you discovered?")
+    if is_secondary == "No":
+        text = "Sad to see you go. Goodbye!"
+        return text
+    
+    print("Lovely!")
+    secondary_input =  input("Pick a secondary data source from DePaul_Index, etc. :")
+    print("Here you go!")
+    readable_change_complex(k, variable, secondary = secondary_input)
+
+    print("That was our app, thanks for playing! Have a great day!")
 
 run()

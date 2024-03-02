@@ -54,7 +54,7 @@ def secondary_text(secondary_data:str, period1:str, period2:str, community:str):
     low, medium, or high
     """
 
-    if secondary_data == "depaul":
+    if secondary_data == "DePaul_Index":
         # load data
         filename = pathlib.Path(__file__).parent.parent / "data" / "clean_data" / "Secondary Data" / "IHS_DePaul_Index.csv"
         depaul = pd.read_csv(filename)
@@ -66,7 +66,7 @@ def secondary_text(secondary_data:str, period1:str, period2:str, community:str):
         
 
 
-def readable_change_simple(k, column = "total_change", secondary = False):
+def readable_change_simple(k, column = "total_change"):
     """
     Takes the output of top_k_change and returns a string explaining the results
     """
@@ -77,8 +77,6 @@ def readable_change_simple(k, column = "total_change", secondary = False):
     change_info_list = []
     for __, determinants in top_changes.items():
         change_text = f"In {determinants[0]} in the {determinants[1]} variable between {determinants[2][0]} and {determinants[2][1]}"
-        if secondary:
-            change_text = change_text + secondary_text(secondary,determinants[2][0], determinants[2][1], determinants[0])
         change_info_list.append(change_text)
     
     print(text)
@@ -108,6 +106,8 @@ def readable_change_complex(k, variable, column = "total_change", secondary = Fa
         i += 1
         change_text = f"In {determinants[0]} between {determinants[2][0]} and {determinants[2][1]}"
         indexed_list.append((i, determinants[0], determinants[2][0], determinants[2][1]))
+        if secondary:
+            change_text = change_text + secondary_text(secondary,determinants[2][0], determinants[2][1], determinants[0])
         change_info_list.append(change_text)
     
     print(text)
