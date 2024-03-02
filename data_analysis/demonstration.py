@@ -13,4 +13,4 @@ def explore(dataset:str, period1: str, period2:str, num_results:int, column = "t
         for r in result:
             print(r)
 
-explore("income", "2005-2009", "2018-2022", 1, further=True)
+explore("household", "2015-2019", "2018-2022", 1)

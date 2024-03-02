@@ -5,10 +5,10 @@ from .combination_dicts import age_categories, income_categories, household_cate
 from .percentage import make_percentage_files
 
 # list of years and variables
-years = ["2005-2009", "2010-2014", "2015-2019", "2018-2022"]
+YEARS = ["2005-2009", "2010-2014", "2015-2019", "2018-2022"]
 # dictionary of the datasets for a variable, and their conversion dictionaries
 # in a tuple
-variables = {
+VARIABLES = {
     "age": ([], age_dictionary, age_categories),
     "ethnicity": ([], ethnicity_dictionary),
     "household": ([], household_dictionary, household_categories),
@@ -19,10 +19,10 @@ variables = {
 }
 
 # create clean datasets
-for name, tuples in variables.items():
-    for period in years:
+for name, tuples in VARIABLES.items():
+    for period in YEARS:
         tuples = get_one_dataset(period, name, tuples)
     make_combined_datasets(name, tuples)
 
 # create datasets with percentages
-make_percentage_files(variables)
+make_percentage_files(VARIABLES)
