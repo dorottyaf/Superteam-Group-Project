@@ -15,6 +15,7 @@ seaborn = "^0.13.2"
 matplot = "^0.1.9"
 lib = "^4.0.0"
 matplotlib = "^3.8.3"
+black = "^24.2.0"
 
 
 [build-system]
