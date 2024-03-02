@@ -26,7 +26,7 @@ def get_chi_shape():
     # mask for only cook county
     return chi_comm
 
-def make_a_plot(df_sub, p1, p2, dem):
+def make_a_plot(df_sub, p1, p2, dem, community_area):
     period = p1
     df_plot = df_sub[df_sub['period'] == period]
     df_plot = gpd.GeoDataFrame(df_plot)
@@ -45,13 +45,14 @@ def make_a_plot(df_sub, p1, p2, dem):
                 ax = ax2,
                 cmap = "RdPu",
                 legend = True)
-    comm_area = df_plot[df_plot['community'] == 'BURNSIDE']
+    comm_area = df_plot[df_plot['community'] == community_area]
     comm_area.plot(ax = ax1, color='none', edgecolor= 'red', linewidth = 2)
+    comm_area.plot(ax = ax2, color='none', edgecolor= 'red', linewidth = 2)
     plt.style.use('bmh')
     ax2.set_title('Percentage of Population that is ' + dem.capitalize() + ' by Community Area for ' + period, fontdict = {'fontsize': '15', 'fontweight' : '3'})
     ax1.axis('off')
     ax2.axis('off')
-    png_name = dem + '_' + p1 + '_' + p2 + '.png'
+    png_name = community_area + '_' + dem + '_' + p1 + '_' + p2 + '.png'
     direc = pathlib.Path(__file__).parent / 'finished_graphs' / png_name
     plt.savefig(direc)
     
@@ -59,7 +60,7 @@ def make_a_plot(df_sub, p1, p2, dem):
 
 
 
-def given_values_make_plot(variable, per1, per2):
+def given_values_make_plot(variable, per1, per2, community_area):
     #get cook shape file
     chi_comm = get_chi_shape()
 
@@ -78,16 +79,17 @@ def given_values_make_plot(variable, per1, per2):
     # making the plots
     for col in df_sub.columns:
         if col != 'community' and col != 'geometry' and col != 'period':
-            make_a_plot(df_sub, per1, per2, col)
+            make_a_plot(df_sub, per1, per2, col, community_area)
 
 def run():
     # ask the user what they want to see
     variable = input('What variable ("age", "ethnicity", "household", "educ", "gender", "income", "race") would you like to see?')
     per1 = input('What period (2005-2009, 2010-2014, 2015-2019, 2018-2022) would you like to start with?')
     per2 = input('What period (2005-2009, 2010-2014, 2015-2019, 2018-2022) would you like to end with?')
+    community_area = input('What community area would you like to see this on? (ALL CAPS PLEASE)')
 
 
-    given_values_make_plot(variable, per1, per2)
+    given_values_make_plot(variable, per1, per2, community_area)
 
 
 
