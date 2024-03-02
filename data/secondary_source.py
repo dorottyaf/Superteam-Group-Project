@@ -18,34 +18,6 @@ def depaul_import_raw():
     return df
 
 ### City of Chicago Business License Counts ### DEPRECATED FOR NOW DUE TO PITA
-'''
-def city_blc_clean():
-    Outputs a dictionary with not ideal keys, but year/community area counts of 
-    business license applications. Not sure if the data in the early years is any good.
-    city_blc_path = pathlib.Path(__file__).parent / "raw_data" / "Secondary Data" / "Business_Licenses_20240217.csv"
-    blc_df = pd.read_csv(city_blc_path)
-
-    blc_df["APPLICATION CREATED DATE"] = blc_df["APPLICATION CREATED DATE"].astype(str)
-    blc_df["APPLICATION CREATED DATE"] = blc_df["APPLICATION CREATED DATE"].apply(date_clean)
-    blc_df = blc_df.drop(blc_df[blc_df.APPLICATION CREATED DATE == "rm"].index)
-
-    data_years = set(blc_df["APPLICATION CREATED DATE"])
-    counts_dict = {}
-
-    for year in data_years:
-        year_df = blc_df[blc_df["APPLICATION CREATED DATE"] == year]
-        area_counts = year_df["ZIP CODE"].value_counts()
-        for area in area_counts.index:
-            key = str(year + ", " + str(area))
-            counts_dict[key] = area_counts[area]
-    #Need to add proper filepath
-    with open("raw_data\Secondary Data\license_clean.json", "w") as readout:
-        json.dump(counts_dict, readout)
-
-    return counts_dict #Need to print to a csv somewhere, perhaps.
-    '''
-
-
 
 def city_blc_import_raw():
     ''' DATA FILE NOT UPLOADED, DO NOT USE (YET)'''
@@ -102,14 +74,51 @@ def city_permit_clean():
 
 # City of Chicago Vacant and Abandoned Building Violations
 
-def city_vacant_import_raw():
+def city_vacant_clean():
     city_vacant_path = pathlib.Path(__file__).parent / "raw_data" / "Secondary Data" / "Vacant_and_Abandoned_Buildings_-_Violations_20240217.csv"
-    vacant_df = pd.read_csv(city_vacant_path)
-    return vacant_df
+    ca_polys = gpd.read_file(CA_PATH)
+    build_vio = gpd.read_file(city_vacant_path)
+    ca_polys = ca_polys.to_crs("WGS84")
+    
+    build_vio["Issued Date"] = build_vio["Issued Date"].astype(str)
+    build_vio["Issued Date"] = build_vio["Issued Date"].apply(date_clean)
+    build_vio = build_vio.drop(build_vio[build_vio["Issued Date"] == "rm"].index)
+    
+    #Rebuilding geometry due to type change failing
+    build_vio["Longitude"] = pd.to_numeric(build_vio["Longitude"])
+    build_vio["Latitude"] = pd.to_numeric(build_vio["Latitude"])
+    build_vio["geometry"] = gpd.points_from_xy(build_vio["Longitude"], build_vio["Latitude"], crs = "WGS84")
+    build_vio["Comm_Area"] = None
+
+    #Inefficient, need way of clearing already assigned ones
+    for ca_index, ca_row in ca_polys.iterrows():
+        check_series = build_vio.within(ca_row["geometry"])
+        for b_index, b_row in build_vio.iterrows():
+            if check_series[b_index]:
+                build_vio["Comm_Area"][b_index] = ca_row["community"]
+    
+    data_years = set(build_vio["Issued Date"])
+    counts_list = []
+    for year in data_years:
+        year_df = build_vio[build_vio["Issued Date"] == year]
+        area_counts = year_df["Comm_Area"].value_counts()
+        for area in area_counts.index:
+            key = str(area)
+            counts_list.append((year, key, area_counts[area],))
+
+    ref_dict, row_series = colswitch_tools()
+    city_columns = build_vio["Issued Date"].unique().astype(str)
+    clean_df = pd.DataFrame(0.0, index = row_series, columns = city_columns)
+
+    for num in counts_list:
+        year, comm_area, count = num
+        clean_df.loc[comm_area, year] = count
+    
+    return clean_df
 
 # LCBH Eviction Data ### READY TO GO
     
-def eviction_import_raw():
+def eviction_clean():
     eviction_path = pathlib.Path(__file__).parent / "raw_data" / "Secondary Data" / "eviction_data_comm_area.csv"
     df = pd.read_csv(eviction_path)
 
@@ -149,7 +158,7 @@ def date_clean(date):
  
     return date
 
-# THIS REQUIRES THE ADDITION OF THE COMMUNITY AREA PATH.
+# Builds some useful things for column construction for clean dataframes
 def colswitch_tools():
     df = gpd.read_file(CA_PATH)
     
