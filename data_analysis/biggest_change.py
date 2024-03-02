@@ -1,4 +1,4 @@
-from exploring_data import load_dataset, find_top_k
+from .exploring_data import load_dataset, find_top_k
 import pandas as pd
 import pathlib
 
@@ -110,5 +110,5 @@ def readable_change_complex(k, variable, column = "total_change", secondary = Fa
         print (f"{index + 1} {message}")
 
 
-readable_change_simple(10, secondary="depaul")
-readable_change_complex(10, "household")
+# readable_change_simple(10, secondary="depaul")
+# readable_change_complex(10, "household")
