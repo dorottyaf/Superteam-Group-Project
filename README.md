@@ -17,7 +17,7 @@ Note: This project requires poetry to be installed
 
 4) Run `poetry install`
 
-5) To initiate the app, run `poetry run py`
+5) To initiate the app, run `py -m chicago_demographic_change`
 
 6) Follow the prompts given to you by the app. Explore the change in Chicago demographics, investigate local changes in housing markets, and visualize to your heart's content!
 
