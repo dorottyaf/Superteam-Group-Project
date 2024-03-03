@@ -33,9 +33,9 @@ def run():
 
     user_smart = False
     while not user_smart:
-        is_graph = input("Would you like to see a graph for one of the changes?" \
-                         " If so, give me the number of the line of the change \
-                         you want to see, if not, type No ")
+        is_graph = input("Would you like to see a graph for one of the changes?"
+                         " If so, give me the number of the line of the change "
+                         "you want to see, if not, type No ")
         if is_graph.isdigit():
             is_graph = int(is_graph)
             if is_graph > len(lst_of_changes):
@@ -56,7 +56,7 @@ def run():
 
     user_smart = False
     while not user_smart:
-        is_secondary = input("Would you like to explore how a secondary data " \
+        is_secondary = input("Would you like to explore how a secondary data " 
                              "changes along the changes you discovered? ")
         if is_secondary not in ["yes", "no", "Yes", "No"]:
             print("Please give a yes or no answer!")
