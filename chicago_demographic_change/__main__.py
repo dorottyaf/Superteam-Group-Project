@@ -1,4 +1,4 @@
-from final import run
+from .final import run
 
 if __name__ == '__main__':
     run()

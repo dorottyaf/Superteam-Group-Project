@@ -1,5 +1,5 @@
-from data_analysis.biggest_change import readable_change_simple, readable_change_complex
-from visualization.explore import given_values_make_plot
+from .data_analysis.biggest_change import readable_change_simple, readable_change_complex
+from .visualization.explore import given_values_make_plot
 
 def run():
     k = input("Hello! Please give me a number and I'll show you the top k demographic changes in Chicago! ")
