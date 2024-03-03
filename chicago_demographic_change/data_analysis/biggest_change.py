@@ -74,7 +74,7 @@ def readable_change_simple(k, column = "total_change"):
     # build the rest of the strings and store them in a list
     change_info_list = []
     for key, determinants in top_changes.items():
-        point = round(key, 2)
+        point = round(key * 100, 2)
         change_text = (f"In {determinants[0]} in the {determinants[1]} variable "
                         f"between {determinants[2][0]} and {determinants[2][1]}"
                         f", the change was {point} percentage points")
