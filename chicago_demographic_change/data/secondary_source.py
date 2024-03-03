@@ -1,4 +1,4 @@
-from data_analysis.geomatching import ZIP_CODES, COMM_AREAS, shape_matcher
+#from ..data_analysis.geomatching import ZIP_CODES, COMM_AREAS, shape_matcher
 import pathlib
 import pandas as pd
 import geopandas as gpd
@@ -64,6 +64,7 @@ def depaul_clean():
 
     out_filename = pathlib.Path(__file__).parent / "clean_data" / "Secondary Data" / "IHS_DePaul_Index.csv"
     depaul.to_csv(out_filename, index = False)
+
 
 def community_fix(dataframe:pd):
     """
@@ -246,28 +247,7 @@ def city_permit_clean():
             clean_df.loc[comm_area, year] = count
 
     #Writes Aggregated Columns
-    clean_df["2005-2009"] = (clean_df["2005"] + clean_df["2006"] + clean_df["2007"]
-                                + clean_df["2008"] + clean_df["2009"])/5
-    clean_df["2010-2014"] = (clean_df["2010"] + clean_df["2011"] + clean_df["2012"]
-                                + clean_df["2013"] + clean_df["2014"])/5
-    clean_df["2015-2019"] = (clean_df["2015"] + clean_df["2016"] + clean_df["2017"]
-                                + clean_df["2018"] + clean_df["2019"])/5
-    clean_df["2018-2022"] = (clean_df["2018"] + clean_df["2019"] + clean_df["2020"]
-                                + clean_df["2021"] + clean_df["2022"])/5
-    
-    # Builds change over time columns
-    change_columns = []
-    for period1, period2 in PERIODS:
-        text = period1 + " to " + period2
-        change_columns.append(text)
-        clean_df[text] = abs(clean_df[period2] - clean_df[period1])
-
-    #Converts change over time columns to bins
-    for column in change_columns:
-        mid_bound = clean_df[column].quantile(q = 0.333, interpolation = "lower")
-        high_bound = clean_df[column].quantile(q = 0.666, interpolation = "lower")
-        lmh_bins = [float("-inf"), mid_bound, high_bound, float("inf")]
-        clean_df[column] = pd.cut(clean_df[column], bins = lmh_bins, labels = ["low", "medium", "high"])
+    clean_df = city_column_aggregator(clean_df)
 
     clean_df.insert(0, "community_area" , clean_df.index)
     out_filename = pathlib.Path(__file__).parent / "clean_data" / "Secondary Data" / "City_Permit_Applications.csv"
