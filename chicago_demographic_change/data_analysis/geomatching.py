@@ -1,12 +1,9 @@
 import geopandas as gpd
 import pathlib
-from collections import namedtuple
 
-'''
-Takes inputs based on the datasets people want to use. Options include 3 sets of 
-Census tracts by decade (2000, 2010, 2020) and Zip Codes for Chicago for smaller
-shapes being rolled up, and Community Area as the larger shape being rolled into.
-'''
+# Takes inputs based on the datasets people want to use. Options include 3 sets of 
+# Census tracts by decade (2000, 2010, 2020) and Zip Codes for Chicago for smaller
+# shapes being rolled up, and Community Area as the larger shape being rolled into.
 
 #Path Variables for shapefiles
 PATH_2000 = pathlib.Path(__file__).parent / "Location Information" / "Boundaries - Census Tracts - 2000" / "geo_export_c39c40c3-f0d6-44b1-b60d-c608f5f21ffe.shp" 
@@ -59,5 +56,3 @@ def shape_matcher(small_name, large_name):
                 break
 
     return comm_area_dict
-
-print(shape_matcher(TRACT_2000, COMM_AREAS))
