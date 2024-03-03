@@ -13,11 +13,11 @@ Note: This project requires poetry to be installed
 
 2) Clone the repository onto your own machine using `git clone git@github.com:dorottyaf/Superteam-Group-Project.git` (SSH) or `git clone https://github.com/dorottyaf/Superteam-Group-Project.git` (HTTPS)
 
-3) Run `poetry shell`
+3) Run `poetry install`
 
-4) Run `poetry install`
+4) Run `poetry shell`
 
-5) To initiate the app, run `poetry run py`
+5) To initiate the app, run `py -m chicago_demographic_change`
 
 6) Follow the prompts given to you by the app. Explore the change in Chicago demographics, investigate local changes in housing markets, and visualize to your heart's content!
 
