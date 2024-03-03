@@ -1,4 +1,4 @@
-from exploring_data import load_dataset, find_top_k
+from .exploring_data import load_dataset, find_top_k
 import pandas as pd
 import pathlib
 
