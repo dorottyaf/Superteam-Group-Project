@@ -42,6 +42,9 @@ def difference_between_years(dataframe:pd, period1:str, period2:str):
 
 
 def find_top_k(dataframe: pd, period1: str, period2: str, variable: str, k:int):
+    """
+    Find the top k changes in a community area between the given time periods
+    """
 
     differences = difference_between_years(dataframe, period1, period2)
 
@@ -50,6 +53,7 @@ def find_top_k(dataframe: pd, period1: str, period2: str, variable: str, k:int):
 
     # get the first k entries
     sorted_k_data = differences.head(k)
+
     return sorted_k_data
 
 
@@ -71,11 +75,12 @@ def detailed_top_k(dataframe:str, period1: str, period2: str, variable: str,):
     for comm_area in comm_area_list:
         text = "In Community Area " + str(comm_area)
         for column in column_list:
-            og_value = round(og_dataframe.loc[(og_dataframe["period"] == period1) & (og_dataframe["community_area"] == comm_area), column].iloc[0], 3)
-            new_value = round(og_dataframe.loc[(og_dataframe["period"] == period2) & (og_dataframe["community_area"] == comm_area), column].iloc[0], 3)
+            og_value = round(og_dataframe.loc[(og_dataframe["period"] == period1)\
+                             & (og_dataframe["community_area"] == comm_area), column].iloc[0], 3)
+            new_value = round(og_dataframe.loc[(og_dataframe["period"] == period2) \
+                            & (og_dataframe["community_area"] == comm_area), column].iloc[0], 3)
             text += f", {column} changed from {og_value} to {new_value}"
     
         strings.append(text)
 
     return strings
-
