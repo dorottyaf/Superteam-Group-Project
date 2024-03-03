@@ -115,10 +115,14 @@ def get_change_columns(dataframe:pd):
         text = period1 + " to " + period2
         change_columns.append(text)
         dataframe[text] = abs(dataframe[period1] - dataframe[period2])
-    
-    for column in change_columns:
-        dataframe[column] = pd.cut(dataframe[column], 3, labels = ["low", "medium", "high"])
 
+    for column in change_columns:
+        mid_bound = dataframe[column].quantile(q = 0.333, interpolation = "lower")
+        high_bound = dataframe[column].quantile(q = 0.666, interpolation = "lower")
+        lmh_bins = [float("-inf"), mid_bound, high_bound, float("inf")]
+        dataframe[column] = pd.cut(dataframe[column], bins = lmh_bins, labels = ["low", "medium", "high"])
+
+    print(dataframe["2010-2014"].value_counts())
     return dataframe
 
 
