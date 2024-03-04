@@ -1,4 +1,4 @@
-from data_analysis.geomatching import TRACT_2000, TRACT_2010, TRACT_2020, \
+from ..data_analysis.geomatching import TRACT_2000, TRACT_2010, TRACT_2020, \
    COMM_AREAS, shape_matcher
 import pandas as pd
 

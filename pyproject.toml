@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "Superteam-Group-Project"
+name = "chicago_demographic_change"
 version = "0.1.0"
 description = "repository for superteam's 30122 project"
 authors = ["\"Echo Nattinger, Paul Soltys, Dorka Frisch, and Andrew Baker\""]

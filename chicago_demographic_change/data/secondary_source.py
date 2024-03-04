@@ -1,4 +1,4 @@
-#from ..data_analysis.geomatching import ZIP_CODES, COMM_AREAS, shape_matcher
+from ..data_analysis.geomatching import ZIP_CODES, COMM_AREAS, shape_matcher
 import pathlib
 import pandas as pd
 import geopandas as gpd
