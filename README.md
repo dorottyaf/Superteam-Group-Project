@@ -19,6 +19,16 @@ To run this project on your own machine, complete the following steps:
 
 6) Follow the prompts given to you by the app. You will be asked to input a number, k -- the app will generate the top k changes in Chicago across all years and all variables. You can then further investigate changes by specific demographic variables, visualize these changes, and investigate how a number of economic and housing measures changed alongside demographic changes. Follow the instructions to learn about the ever-changing city of Chicago!
 
+Our app allows you to explore changes in the following demographic variables:
+
+- gender: Male, Female identification
+- race: racial identification according to U.S. Census categories
+- ethnicity: ethnic identification according to U.S. Census categories
+- income: individual income in USD
+- household: household income in USD
+- age: age in years
+- education: highest level of educational attainment
+
 A brief description of secondary data sources available to you in analysis include:
 
 - City Building Permits: Building permit applications submitted - a rough proxy of new or additional construction activity.
