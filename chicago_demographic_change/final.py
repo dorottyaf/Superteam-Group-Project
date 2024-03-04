@@ -4,6 +4,8 @@ from .visualization.explore import given_values_make_plot
 def run():
     k = input("Hello! Please give me a number and I'll show you the top k " \
               "demographic changes in Chicago! ")
+    while not k.isdigit():
+        k = input("Please give me a number! ")
     k = int(k)
     readable_change_simple(k)
 
