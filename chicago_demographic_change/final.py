@@ -70,9 +70,10 @@ def run():
 
     user_smart = False
     while not user_smart:
-        secondary_input =  input("Pick a secondary data source from DePaul_Index," \
-                                 " etc. : ")
-        if secondary_input not in ["DePaul_Index"]:
+        secondary_input =  input("Pick a secondary data source from DePaul Index," \
+                                 " Evictions, City Permits, or Vacant Lot Complaints: ")
+        if secondary_input not in ["DePaul Index", "Evictions", "City Permits", \
+                                   "Vacant Lot Complaints"]:
             print("Please give a valid secondary data source name!")
         else:
             user_smart = True

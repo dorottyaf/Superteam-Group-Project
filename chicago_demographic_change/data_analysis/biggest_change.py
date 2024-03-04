@@ -47,7 +47,7 @@ def secondary_text(secondary_data:str, period1:str, period2:str, community:str):
     low, medium, or high
     """
 
-    if secondary_data == "DePaul_Index":
+    if secondary_data == "DePaul Index":
         # load data
         filename = pathlib.Path(__file__).parent.parent / "data" / "clean_data"\
             / "Secondary Data" / "IHS_DePaul_Index.csv"
@@ -58,7 +58,51 @@ def secondary_text(secondary_data:str, period1:str, period2:str, community:str):
         change = depaul.loc[depaul["community_area"] == community, column].values[0]
 
         return f" and the change in the DePaul index was {change}"
-        
+    
+    if secondary_data == "Evictions":
+        # load data
+        filename = pathlib.Path(__file__).parent.parent / "data" / "clean_data"\
+            / "Secondary Data" / "LCBH_Evictions.csv"
+        evictions = pd.read_csv(filename)
+
+        # build text for Evictions
+        if period1 != "2010-2014":
+            return f" and unfortunately we don't have available data on "\
+                  "evictions for this time period"  
+        else:
+            change = evictions.loc[evictions["community_area"] == community, \
+                                 "2010-2014 to 2015-2019"].values[0]
+            return f" and the change in Evictions was {change}"
+    
+    if secondary_data == "City Permits":
+        # load data
+        filename = pathlib.Path(__file__).parent.parent / "data" / "clean_data"\
+            / "Secondary Data" / "City_Permit_Applications.csv"
+        permits = pd.read_csv(filename)
+
+        # build text for City Permits
+        column = period1 + " to " + period2
+        change = permits.loc[permits["community_area"] == community, column].values[0]
+
+        return f" and the change in City Permits was {change}"
+    
+    if secondary_data == "Vacant Lot Complaints":
+        # load data
+        filename = pathlib.Path(__file__).parent.parent / "data" / "clean_data"\
+            / "Secondary Data" / "City_Vacant_Abandoned.csv"
+        permits = pd.read_csv(filename)
+
+        if period1 == "2005-2009":
+            return f" and unfortunately we don't have available data on"\
+                  "Vacant Lot Complaints for this time period"
+        else:
+            # build text for Vacant Lots
+            column = period1 + " to " + period2
+            change = permits.loc[permits["community_area"] == community, \
+                                 column].values[0]
+
+        return f" and the change in Vacant Lot Complaints was {change}"
+       
 
 def readable_change_simple(k, column = "total_change"):
     """
