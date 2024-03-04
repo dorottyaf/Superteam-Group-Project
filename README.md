@@ -7,8 +7,6 @@ Using a fuzzy geomatching algorithm, we grouped our tract-level Census data into
 
 To run this project on your own machine, complete the following steps: 
 
-Note: This project requires poetry to be installed 
-
 1) Ensure [poetry is installed on your local machine](https://python-poetry.org/docs/)
 
 2) Clone the repository onto your own machine using `git clone git@github.com:dorottyaf/Superteam-Group-Project.git` (SSH) or `git clone https://github.com/dorottyaf/Superteam-Group-Project.git` (HTTPS)
@@ -19,6 +17,15 @@ Note: This project requires poetry to be installed
 
 5) To initiate the app, run `py -m chicago_demographic_change`
 
-6) Follow the prompts given to you by the app. Explore the change in Chicago demographics, investigate local changes in housing markets, and visualize to your heart's content!
+6) Follow the prompts given to you by the app. You will be asked to input a number, k -- the app will generate the top k changes in Chicago across all years and all variables. You can then further investigate changes by specific demographic variables, visualize these changes, and investigate how a number of economic and housing measures changed alongside demographic changes. Follow the instructions to learn about the ever-changing city of Chicago!
+
+A brief description of secondary data sources available to you in analysis include:
+
+- City Building Permits: Building permit applications submitted - a rough proxy of new or additional construction activity.
+- City Business Licenses: Business license applications submitted - a rough proxy of new or additional economic activity.
+- Eviction Filings: The number of eviction proceedings filed in an area - conceptually may be linked to higher rents or property values.
+- DePaul Housing Price Index: an index of home prices relative to the year 2000 - a measure of homeowner costs in an area.
+- City Vacant and Abandoned Building Violations: Recorded complaints investigated by the city related to derelict or empty buildings. 
+
 
 _This product uses the Census Bureau Data API but is not endorsed or certified by the Census Bureau._
