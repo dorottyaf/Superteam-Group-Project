@@ -1,6 +1,6 @@
-from APIquery import make_pull, make_pull_2022
+from .APIquery import make_pull, make_pull_2022
 # Import our list of census variables
-from querying_constants import (
+from .querying_constants import (
     gender_vars,
     race_vars,
     age_vars,
