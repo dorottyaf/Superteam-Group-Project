@@ -1,9 +1,7 @@
 import pandas as pd
 import geopandas as gpd
 import pathlib
-import seaborn as sns
 import matplotlib.pyplot as plt
-from pprint import pprint
 
 variables = ["age", "ethnicity", "household", "educ", "gender", "income", "race"]
 COLS_TO_DROP = ["NAME", "state", "county", "tract", "population", "period"]
