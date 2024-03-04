@@ -47,6 +47,13 @@ DATA_TO_COMMUNITY = {
 
 # DePaul Housing Institute Pricing Index
 
+# DePaul is set up as a range of functions where:
+# community_fix de-aggregates DePaul's larger area groupings
+# transpose & delete_irrelevant_years are minor format adjustments & cleaning
+# combine_years builds aggregate columns to match census data
+# get_change_columns gets change values between time periods & assigns 
+# high/med/low values based on rate of change
+
 def depaul_clean():
     """
     Does all the necessary cleaning and returns a clean dataframe
@@ -315,6 +322,7 @@ def city_vacant_clean():
         year, comm_area, count = num
         clean_df.loc[comm_area, year] = count
     
+    # Data pre-2010 is unreliable or MIA
     # Missing 2010- adjusting for more comparisons
     clean_df.insert(0, "community_area" , clean_df.index)
     clean_df["2010-2014"] = (clean_df["2011"] + clean_df["2012"]
@@ -330,11 +338,17 @@ def city_vacant_clean():
     clean_df["2010-2014 to 2018-2022"] = abs(clean_df["2018-2022"]- clean_df["2010-2014"])
     clean_df["2015-2019 to 2018-2022"] = abs(clean_df["2018-2022"]- clean_df["2015-2019"])
     
+    # Bins data, any column with no reporting across all relevant years set as
+    # "no data", rest according to quantile
     for column in change_columns:
-        mid_bound = clean_df[column].quantile(q = 0.333, interpolation = "lower")
-        high_bound = clean_df[column].quantile(q = 0.666, interpolation = "lower")
-        lmh_bins = [float("-inf"), mid_bound, high_bound, float("inf")]
-        clean_df[column] = pd.cut(clean_df[column], bins = lmh_bins, labels = ["low", "medium", "high"])
+        mid_bound_s = clean_df[clean_df[column] > 0].quantile(
+            q = 0.333, interpolation = "lower")
+        high_bound_s = clean_df[clean_df[column] > 0].quantile(
+            q = 0.666, interpolation = "lower")
+        lmh_bins = [float("-inf"), 0, mid_bound_s[column],
+                     high_bound_s[column], float("inf")]
+        clean_df[column] = pd.cut(clean_df[column], bins = lmh_bins, 
+                                  labels = ["no violations or no data", "low", "medium", "high"])
 
     out_filename = pathlib.Path(__file__).parent / "clean_data" / "Secondary Data" / "City_Vacant_Abandoned.csv"
     clean_df.to_csv(out_filename, index = False)
@@ -378,12 +392,17 @@ def eviction_clean():
     clean_df["2010-2014 to 2015-2019"] = abs(clean_df["2015-2019"]- clean_df["2010-2014"])
     clean_df.insert(0, "community_area" , clean_df.index)
 
-    mid_bound = clean_df["2010-2014 to 2015-2019"].quantile(q = 0.333, interpolation = "lower")
-    high_bound = clean_df["2010-2014 to 2015-2019"].quantile(q = 0.666, interpolation = "lower")
-    lmh_bins = [float("-inf"), mid_bound, high_bound, float("inf")]
+    # Bins data, any column with no reporting across all relevant years set as
+    # "no data", rest according to quantile
+    mid_bound_s = clean_df[clean_df["2010-2014 to 2015-2019"] > 0].quantile(
+        q = 0.333, interpolation = "lower")
+    high_bound_s = clean_df[clean_df["2010-2014 to 2015-2019"] > 0].quantile(
+        q = 0.666, interpolation = "lower")
+    lmh_bins = [float("-inf"), 0, mid_bound_s["2010-2014 to 2015-2019"],
+             high_bound_s["2010-2014 to 2015-2019"], float("inf")]
     clean_df["2010-2014 to 2015-2019"] = pd.cut(
         clean_df["2010-2014 to 2015-2019"], 
-        bins = lmh_bins, labels = ["low", "medium", "high"])
+        bins = lmh_bins, labels = ["no data", "low", "medium", "high"])
 
     out_filename = pathlib.Path(__file__).parent / "clean_data" / "Secondary Data" / "LCBH_Evictions.csv"
     clean_df.to_csv(out_filename, index = False)
@@ -426,6 +445,13 @@ def colswitch_tools():
     return name_num_dict, row_series
 
 def city_column_aggregator(clean_df):
+    '''
+    Some re-usable code for City datasets that have the full range of years
+    available that we have for census tracts.
+    - Builds aggregate columns to match census
+    - Builds change over time columns and writes in data, converts data to
+        high/med/low bins
+    '''
     #Writes Aggregated Columns
     clean_df["2005-2009"] = (clean_df["2005"] + clean_df["2006"] + clean_df["2007"]
                                 + clean_df["2008"] + clean_df["2009"])/5
@@ -454,8 +480,8 @@ def city_column_aggregator(clean_df):
 
 ######## Functions Running Secondary Sources #########
 
-depaul_clean()
+#depaul_clean()
 #city_blc_clean()
-city_permit_clean()
+#city_permit_clean()
 city_vacant_clean()
-eviction_clean()
+#eviction_clean()
