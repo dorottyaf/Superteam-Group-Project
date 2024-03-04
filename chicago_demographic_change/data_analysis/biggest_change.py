@@ -155,7 +155,7 @@ def readable_change_complex(k, variable, column = "total_change", \
 
     for key, determinants in top_changes.items():
         i += 1
-        point = round(key, 2)
+        point = round(key * 100, 2)
         change_text = (f"In {determinants[0]} between {determinants[2][0]} " 
                        f"and {determinants[2][1]}"
                        f", the change was {point} percentage points")
