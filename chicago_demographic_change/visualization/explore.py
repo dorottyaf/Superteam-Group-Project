@@ -4,7 +4,6 @@ import pathlib
 import matplotlib.pyplot as plt
 
 variables = ["age", "ethnicity", "household", "educ", "gender", "income", "race"]
-COLS_TO_DROP = ["NAME", "state", "county", "tract", "population", "period"]
 COLS_TO_DROP2 = ["NAME", "state", "county", "population"]
 COLS_TO_DROP3 = [
     "area",
