@@ -1,1 +1,1 @@
-This is the folder for everything visualization related
+These are the finished graphs
