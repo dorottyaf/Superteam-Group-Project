@@ -372,7 +372,8 @@ def eviction_clean():
     df = pd.read_csv(eviction_path)
 
     # Sets up the clean dataframe with empty values
-    clean_df_row = df["area_name"].str.upper().unique()
+    df["area_name"] = df["area_name"].str.upper()
+    clean_df_row = df["area_name"].unique()
     clean_df_col = df["filing_year"].unique()
     clean_df = pd.DataFrame(0.0, columns = clean_df_col, index = clean_df_row)
 
@@ -483,5 +484,5 @@ def city_column_aggregator(clean_df):
 #depaul_clean()
 #city_blc_clean()
 #city_permit_clean()
-city_vacant_clean()
-#eviction_clean()
+#city_vacant_clean()
+eviction_clean()
