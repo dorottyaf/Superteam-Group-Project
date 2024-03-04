@@ -1,6 +1,13 @@
 from .clean_process import get_one_dataset, make_combined_datasets
-from .column_conversion import age_dictionary, educ_dictionary, income_dictionary, \
-    ethnicity_dictionary, gender_dictionary, household_dictionary, race_dictionary
+from .column_conversion import (
+    age_dictionary,
+    educ_dictionary,
+    income_dictionary,
+    ethnicity_dictionary,
+    gender_dictionary,
+    household_dictionary,
+    race_dictionary,
+)
 from .combination_dicts import age_categories, income_categories, household_categories
 from .percentage import make_percentage_files
 
