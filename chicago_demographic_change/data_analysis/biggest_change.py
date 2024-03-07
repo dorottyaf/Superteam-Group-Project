@@ -7,7 +7,7 @@ PERIODS = [("2005-2009", "2010-2014"),("2010-2014", "2015-2019"), \
            ("2015-2019", "2018-2022"), ("2005-2009", "2018-2022")]
 
 
-def top_k_change(k, column = "total_change", concrete = (False, "")):
+def top_k_change(k:int, column = "total_change", concrete = (False, "")):
     """
     Find the top k biggest change between any two periods of time accross all
     variables and return a sorted dictionary with the change as the key and 
@@ -135,6 +135,8 @@ def readable_change_complex(k, variable, column = "total_change", \
     """
     Takes the output of top_k_change when we are looking for changes in a 
     specific variable and prints out the results
+
+    It also return a list of the biggest change to be used for further funcitons
     """
 
     # get top changes for a given variable
