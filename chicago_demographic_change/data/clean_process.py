@@ -6,12 +6,22 @@ import pandas as pd
 
 def get_one_dataset(period: str, variable_name: str, variable_tuple: tuple):
     """
+    Inputs:
+        period: The time period
+        variable_name: Name of a demographic variable
+        variable_tuple: Tuple containing a list of the dataframes relating to
+        a demographic variable, as well as the relevant dictionaries belonging
+        to that variable
+
     For one variable in one time period, get the raw data, add a population column,
     add a column to record the time period, and convert the tracts to community
     areas.
 
     Essentially get one complete dataset for a given variable at a given timeperiod,
-    then append it to it's corresponding variable list
+    then append it to it's corresponding variable list in the variable_tuple
+
+    Returns: The variable_tuple, with the new dataset added to the list in the 
+    tuple
     """
     current_file = variable_name + "_" + period + ".csv"
     filename = pathlib.Path(__file__).parent / "raw_data" / period / current_file
@@ -38,7 +48,16 @@ def get_one_dataset(period: str, variable_name: str, variable_tuple: tuple):
 
 def make_combined_datasets(variable_name: str, variable_tuple: tuple):
     """
-    Combine the different datasets for a variable into one large dataset
+    Inputs:
+        variable_name: Name of a demographic variable
+        variable_tuple: A tuple containing the list of datasets for a given
+        variable, as well as the relevant dictionaires 
+
+    Combines the different datasets for a variable into one large dataset and
+    exports it as a csv file
+
+    Returns: A .csv file containing every entry for every time period for a 
+    given demographic variable
     """
     # combine datasets into one large one and rename them
     data = pd.concat(variable_tuple[0])
@@ -55,8 +74,14 @@ def make_combined_datasets(variable_name: str, variable_tuple: tuple):
 
 def add_population(dataframe: pd, period: str):
     """
-    Given a dataframe and a period of time, add a column recording the
-    corresponding population to each tract
+    Inputs:
+        dataframe: A pandas dataframe for a given demogrpahic variable
+        period: A time period
+
+    Given a dataframe and a period of time, adds a column recording the
+    corresponding population for each tract
+
+    Returns: The dataframe with the population column added
     """
     population_file = "population_" + period + ".csv"
     popfile = pathlib.Path(__file__).parent / "raw_data" / period / population_file
@@ -73,9 +98,14 @@ def add_population(dataframe: pd, period: str):
 
 def fix_2005_2009_data(data: pd, variable_name: str):
     """
-    Fixes the age, education, and income variable in a pandas dataframe
+    Inputs:
+        data: A pandas dataframe with information on a demographic variable
+        variable_name: Name of the demographic variable
 
-    Returns the fixed dataframe
+    Fixes the age, education, and income variable in a pandas dataframe when
+    the data is from the 2005-2009 time period.
+
+    Returns: The fixed dataframe
     """
     if variable_name == "age":
         for new, old in age_conversion.items():
@@ -98,7 +128,14 @@ def fix_2005_2009_data(data: pd, variable_name: str):
 
 def combine_columns(new_name: str, old_names: list, dataframe: pd):
     """
-    Combines columns in a dataframe into a new column
+    Inputs:
+        new_name: The name of the new column
+        old_names: List of column names
+        dataframe: A pandas dataframe 
+
+    Combines certain columns in a pandas dataframe into a new column.
+
+    Returns: The dataframe with the column combined
     """
     # change the first one in place so the dataframe stays pretty
     dataframe.rename(columns={old_names[0]: new_name}, inplace=True)
@@ -115,8 +152,17 @@ def combine_age_income_household(
     dataframe: pd, variable_name: str, variable_tuple: tuple
 ):
     """
-    Rearrange the data in the age, income, and household columns into fewer
-    "buckets" to help wiht analysis
+    Inputs:
+        dataframe: A pandas dataframe
+        variable_name: Name of the demographic variable
+        variable_tuple: A tuple containing the relevant dictionaires for a 
+        given variable
+
+    Rearranges the data in the age, income, and household columns into fewer
+    "buckets" to help with analysis
+
+    Returns: The dataframe with the age, income, and household columns 
+    changed
     """
 
     if variable_name == "age":

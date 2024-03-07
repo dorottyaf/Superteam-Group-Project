@@ -14,6 +14,8 @@ def clean_tract_names(tracts: dict):
    """
    Takes a dictionary mapping community areas to tracts and removes any 
    leading zeroes from the tract code to match the census data
+
+   Returns: A cleaned tract dictionary
    """
    AREAS_WITH_ZERO = ["LINCOLN SQUARE", "ROGERS PARK", "WEST RIDGE", "UPTOWN", \
                       "NEAR NORTH SIDE", "LAKE VIEW", "NORTH CENTER", \
@@ -47,6 +49,8 @@ def tract_to_community(dataset:pd, tract_dictionary:dict):
    """
    Takes a dataset and combines the tracts into the community areas for 
    that year
+
+   Returns: A pandas dataset with the tracts mapped to community areas
    """
    # setting tract, state, and county columns to strings
    # tract needs to be a string to be comparable with the dictionary
@@ -70,6 +74,8 @@ def drop_suburbs(dataset: pd):
    """
    Drop all the tracts which were not mapped to a community area as they are
    tracts in Cook County which are outside the bounds of the city of Chicago
+
+   Returns: A pandas dataset where only the areas in Chicago are included
    """
 
    sorted_data = dataset.sort_values("tract")
@@ -83,6 +89,8 @@ def get_community_areas(dataset:pd, period:str):
    """
    Takes a pandas dataframe and maps the tracts to community areas in Chicago.
    If a tract is outside of Chicago, it drops it
+
+   Returns: A pandas dataset with community areas instead of tracts
    """
    tracts = TRACT_TO_PERIOD[period]
    tract_dictionary = clean_tract_names(tracts)

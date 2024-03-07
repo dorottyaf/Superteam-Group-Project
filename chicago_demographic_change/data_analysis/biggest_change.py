@@ -9,9 +9,22 @@ PERIODS = [("2005-2009", "2010-2014"),("2010-2014", "2015-2019"), \
 
 def top_k_change(k:int, column = "total_change", concrete = (False, "")):
     """
+    Inputs:
+        k: The number of top changes the function shuld give back
+        column(string): The name of the column to sort by, defaults to 
+        total_change
+        concrete(tuple): A tuple with a boolean and a string, the boolean is
+        False by default. If we only want to explore one demographiccvariable, 
+        the boolean should be set to True, and the string should be the name of 
+        the concrete demographic variable we want to find the top changes for
+
     Find the top k biggest change between any two periods of time accross all
     variables and return a sorted dictionary with the change as the key and 
-    the variable and two periods as the values
+    the variable and two time periods as the values.
+
+    Returns: Sorted dictionary of the top changes with the changes as the keys
+    and their respective community area, demogrpahic variable, and two time 
+    periods as the value in a tuple. 
     """
 
     changes = {}
@@ -43,8 +56,22 @@ def top_k_change(k:int, column = "total_change", concrete = (False, "")):
 
 def secondary_text(secondary_data:str, period1:str, period2:str, community:str):
     """
-    Get the info on whether the secondary data change in the time period was
-    low, medium, or high
+    --- Although the code looks similar for the four secondary datasources, 
+    we did not have data available for every time period, and each datasource
+    was unique in what time period it was missing. Due to each of them needing
+    unique conditions to work, I split them into four if statements, as ageneral
+    function would've been just as complicated to write with all the exceptions.
+    ---
+    Inputs:
+        secondary_data: The name of the secondary dataset 
+        period1: The first time period
+        period2: The second time period
+        community: The community area we want to explore
+
+    Get the info on whether the change in the secondary data change for the 
+    given time period was low, medium, or high
+
+    Returns:A string containing information about the secondary dataset
     """
 
     if secondary_data == "DePaul Index":
@@ -104,9 +131,17 @@ def secondary_text(secondary_data:str, period1:str, period2:str, community:str):
         return f" and the change in Vacant Lot Complaints was {change}"
        
 
-def readable_change_simple(k, column = "total_change"):
+def readable_change_simple(k:int, column = "total_change"):
     """
+    Inputs:
+        k: The number of changes to look for
+        column(str): Defaults to "total_change", the name of the column to 
+        sort the top k changes by
+
     Takes the output of top_k_change and returns a string explaining the results
+
+    Returns: A print statement of strings explaining the result of the function
+    top_k_change
     """
 
     # get the top changes
@@ -130,13 +165,25 @@ def readable_change_simple(k, column = "total_change"):
         print (f"{index + 1} {message}")
 
 
-def readable_change_complex(k, variable, column = "total_change", \
+def readable_change_complex(k:int, variable:str, column = "total_change", \
                             secondary = False):
     """
-    Takes the output of top_k_change when we are looking for changes in a 
-    specific variable and prints out the results
+    Inputs:
+        k: The number of top changes we're interested in
+        variable: A demographic variable to find the top changes for
+        column(str): Default to "total_change", the column we want to sort
+        the changes by
+        secondary(boolean): Defaults to False, determines whether we want to 
+        print out information about a secondary dataset
 
-    It also return a list of the biggest change to be used for further funcitons
+    Takes the output of top_k_change when we are looking for changes in a 
+    specific variable and prints out the results. Return a list of the biggest
+    changes to be used by other functions.
+
+    Returns: Various print statements explaining the result of the top_k_change
+    function when we are looking for changes in a specific demographic variable,
+    as well as returns a list of the top changes where each entry in the list is 
+    a tuple containing (index, community are, period1, period2).
     """
 
     # get top changes for a given variable
@@ -161,7 +208,8 @@ def readable_change_complex(k, variable, column = "total_change", \
         change_text = (f"In {determinants[0]} between {determinants[2][0]} " 
                        f"and {determinants[2][1]}"
                        f", the change was {point} percentage points")
-        indexed_list.append((i, determinants[0], determinants[2][0], determinants[2][1]))
+        indexed_list.append((i, determinants[0], determinants[2][0], \
+                             determinants[2][1]))
         # if user wants information from a secondary data source, 
         # add it to the end of sentence
         if secondary:

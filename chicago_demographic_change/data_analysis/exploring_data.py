@@ -14,8 +14,19 @@ def load_dataset(variable_name:str):
 
 def difference_between_years(dataframe:pd, period1:str, period2:str):
     """
+    Inputs:
+        dataframe: A Pandas Dataframe with the proportions of certain 
+        demographic variables organised by community areas
+        period1: the first period of time
+        period2: the second period of time 
+
     Given a dataframe and two periods of time, the function calculates the 
     difference in values between the two years
+
+    Returns: 
+        A Pandas Dataframe where the values are the differences in proportion
+        between the given time periods. The function also creates a "total_change"
+        column which captures the total absolute change between the time periods
     """
 
     # subtract the two years we're interested in
@@ -41,15 +52,28 @@ def difference_between_years(dataframe:pd, period1:str, period2:str):
     return differences_df
 
 
-def find_top_k(dataframe: pd, period1: str, period2: str, variable: str, k:int):
+def find_top_k(dataframe: pd, period1: str, period2: str, column: str, k:int):
     """
-    Find the top k changes in a community area between the given time periods
+    Inputs:
+        dataframe: A Pandas Dataframe with the proportions of certain 
+        demographic variables organised by community areas
+        period1: the first period of time
+        period2: the second period of time
+        column: the column of the dataframe to sort by when finding the 
+        biggest changes
+        k: the number of results to get back
+
+    Finds the top k changes in a community area between the given time periods
+    by calculating the difference between the two time periods, and sorting
+    based on the given column.
+
+    Returns: A sorted dataframe
     """
 
     differences = difference_between_years(dataframe, period1, period2)
 
     # sort by descending order
-    differences = differences.sort_values(by=[variable], ascending=False)
+    differences = differences.sort_values(by=[column], ascending=False)
 
     # get the first k entries
     sorted_k_data = differences.head(k)
@@ -59,7 +83,22 @@ def find_top_k(dataframe: pd, period1: str, period2: str, variable: str, k:int):
 
 def detailed_top_k(dataframe:str, period1: str, period2: str, variable: str,):
     """
-    Print out more information about the changes in a Community Area between two years
+    --- Our app does not end up using this function, we used it internally
+    to explore the data in the beginning ---
+
+    Inputs:
+        dataframe: A Pandas Dataframe with the proportions of certain 
+        demographic variables organised by community areas
+        period1: the first period of time
+        period2: the second period of time
+        vairable: a demographic variable we want to find the top changes for
+
+    Prints out more information about the changes in a Community Area between 
+    two periods. Taking the two periods, the function looks column by column
+    to calculate the changes in values, and prints out a detailed list of changes
+    for each community area.
+
+    Returns: A list of strings containing information about the changes
     """
 
     # put the top_k Community Areas in a list
