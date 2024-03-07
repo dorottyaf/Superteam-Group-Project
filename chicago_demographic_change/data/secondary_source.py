@@ -10,8 +10,9 @@ import re
 # cleaning functions on, as both are quite large.
 
 CA_PATH = pathlib.Path(__file__).parents[1] / "data_analysis" / "Location Information" / "Boundaries - Community Areas (current)" / "geo_export_8fac6090-b29a-4cf4-b6ab-c66b0d4da44a.shp"
-
-# String coding for cleaning:
+BLC_PATH = pathlib.Path(__file__).parent / "raw_data" / "Secondary Data" / "Business_Licenses_20240217.csv"
+PERMIT_PATH = pathlib.Path(__file__).parent / "raw_data" / "Secondary Data" / "Building_Permits_20240217.csv"
+# String encodings for cleaning:
 YEARS = ["2005-2009", "2010-2014", "2015-2019", "2018-2022"]
 
 PERIODS = [("2005-2009", "2010-2014"),("2010-2014", "2015-2019"), \
@@ -167,39 +168,71 @@ def get_change_columns(dataframe:pd):
 ### City of Chicago Business License Counts
 
 def city_blc_clean():
+    '''
+    Cleaning Process:
+    - Imported 2 dataframes: comm_area is a GPD, BLC is a regular frame (for now).
+    - Base field cleaning to aggregate date by year, and rebuilding a geometry
+        for the location of each license application.
+    - Converts the BLC data to geopandas dataset for the next step:
+    - Assign each license location to a community area with shape matching
+    - Build a counts list for each community area by year for the new dataframe
+    - Assemble a clean dataframe and insert counts from the list
+    - Build aggregated columns to match to census data, and columns for the 
+        differences between time periods
+    - Used quantile markers to split data into 3 levels of change
+    - Assigned each comm area/year to a category based on amount of change
 
-    city_blc_path = pathlib.Path(__file__).parent / "raw_data" / "Secondary Data" / "Business_Licenses_20240217.csv"
-    blc_df = pd.read_csv(city_blc_path)
+    Output: .csv placed in Secondary Data: clean_data of the cleaned dataframe
+        with columns indicating the level of change between time periods of interest.
     
+    '''
+    ca_polys = gpd.read_file(CA_PATH)
+    ca_polys = ca_polys.to_crs("WGS84")
+
+    
+    blc_df = pd.read_csv(BLC_PATH)
+    blc_df = blc_df.drop(columns = ["LICENSE ID", "ACCOUNT NUMBER", "SITE NUMBER",
+                                    "LEGAL NAME", "DOING BUSINESS AS NAME"] )
+
     blc_df["APPLICATION CREATED DATE"] = blc_df["APPLICATION CREATED DATE"].astype(str)
     blc_df["APPLICATION CREATED DATE"] = blc_df["APPLICATION CREATED DATE"].apply(date_clean)
     blc_df = blc_df.drop(blc_df[blc_df["APPLICATION CREATED DATE"] == "rm"].index)
 
+    #Rebuilding geometry due to type change failing w/ Location
+    blc_df["LONGITUDE"] = pd.to_numeric(blc_df["LONGITUDE"])
+    blc_df["LATITUDE"] = pd.to_numeric(blc_df["LATITUDE"])
+    #Switching the dataframe to GPD
+    blc_df = gpd.GeoDataFrame(blc_df, geometry = gpd.points_from_xy(
+        blc_df["LONGITUDE"], blc_df["LATITUDE"]), crs = "WGS84")
+
+    blc_df["Comm_Area"] = None
+    #Assigns each point a community area
+    for ca_index, ca_row in ca_polys.iterrows():
+        check_series = blc_df.within(ca_row["geometry"])
+        check_series = check_series[check_series == True]
+        for b_index, val in check_series.items():
+                blc_df.loc[b_index,"Comm_Area"] = ca_row["community"]
+    
+    #Builds list to fill clean dataframe with
     data_years = set(blc_df["APPLICATION CREATED DATE"])
     counts_list = []
     for year in data_years:
         year_df = blc_df[blc_df["APPLICATION CREATED DATE"] == year]
-        area_counts = year_df["ZIP CODE"].value_counts()
+        area_counts = year_df["Comm_Area"].value_counts()
         for area in area_counts.index:
             key = str(area)
             counts_list.append((year, key, area_counts[area],))
-    
-    matching_dict = shape_matcher(ZIP_CODES, COMM_AREAS)
-    inverted_match_dict = {}
-    for key in matching_dict:
-        for zip in matching_dict[key]:
-            inverted_match_dict[zip] = key
 
     # Building a clean Dataframe
     ref_dict, row_series = colswitch_tools()
-    year_columns = blc_df["APPLICATION_START_DATE"].unique().astype(str)
+    year_columns = blc_df["APPLICATION CREATED DATE"].unique().astype(str)
     clean_df = pd.DataFrame(0.0, index = row_series, columns = year_columns)
-
-    for tup in counts_list:
-        year, zip_key, count = tup
-        comm_area = inverted_match_dict[zip_key]
-        clean_df.loc[comm_area, year] = count
     
+    #Writing data to the clean dataframe
+    for num in counts_list:
+        year, comm_area, count = num
+        clean_df.loc[comm_area, year] = count
+
     clean_df = city_column_aggregator(clean_df)
 
     clean_df.insert(0, "community_area" , clean_df.index)
@@ -224,14 +257,14 @@ def city_permit_clean():
     Output: .csv placed in Secondary Data: clean_data of the cleaned dataframe
         with columns indicating the level of change between time periods of interest.
     '''
-    city_permit_path = pathlib.Path(__file__).parent / "raw_data" / "Secondary Data" / "Building_Permits_20240217.csv"
-    bp_df = pd.read_csv(city_permit_path)
+    
+    bp_df = pd.read_csv(PERMIT_PATH)
 
     bp_df["APPLICATION_START_DATE"] = bp_df["APPLICATION_START_DATE"].astype(str)
     bp_df["APPLICATION_START_DATE"] = bp_df["APPLICATION_START_DATE"].apply(date_clean)
     bp_df = bp_df.drop(bp_df[bp_df["APPLICATION_START_DATE"] == "rm"].index)
 
-    # Building a list from which to fill out a clean dataframe.
+    # Building a list from which to fill out a clean dataframe
     data_years = set(bp_df["APPLICATION_START_DATE"])
     counts_list = []
     for year in data_years:
@@ -241,11 +274,12 @@ def city_permit_clean():
             key = str(area)
             counts_list.append((year, key, area_counts[area],))
 
-    # Building a clean Dataframe
+    # Building a clean dataframe
     ref_dict, row_series = colswitch_tools()
     year_columns = bp_df["APPLICATION_START_DATE"].unique().astype(str)
     clean_df = pd.DataFrame(0.0, index = row_series, columns = year_columns)
 
+    # Filling in the clean dataframe
     for num in counts_list:
         year, ca_num, count = num
         ca_num = str(int(float(ca_num)))
@@ -256,6 +290,7 @@ def city_permit_clean():
     #Writes Aggregated Columns
     clean_df = city_column_aggregator(clean_df)
 
+    #Includes Comm Areas as a column and exports to csv
     clean_df.insert(0, "community_area" , clean_df.index)
     out_filename = pathlib.Path(__file__).parent / "clean_data" / "Secondary Data" / "City_Permit_Applications.csv"
     clean_df.to_csv(out_filename, index = False)
@@ -298,13 +333,14 @@ def city_vacant_clean():
     build_vio["geometry"] = gpd.points_from_xy(build_vio["Longitude"], build_vio["Latitude"], crs = "WGS84")
     
     build_vio["Comm_Area"] = None
-    #Inefficient, but somewhat required for checking each point against many shapes
+    # Assigns each point a community area
     for ca_index, ca_row in ca_polys.iterrows():
         check_series = build_vio.within(ca_row["geometry"])
-        for b_index, b_row in build_vio.iterrows():
-            if check_series[b_index]:
-                build_vio.loc[b_index,"Comm_Area"] = ca_row["community"]
+        check_series = check_series[check_series == True]
+        for b_index, val in check_series.items():
+            build_vio.loc[b_index,"Comm_Area"] = ca_row["community"]
     
+    #Creates a list to fill the clean dataframe with
     data_years = set(build_vio["Issued Date"])
     counts_list = []
     for year in data_years:
@@ -471,18 +507,28 @@ def city_column_aggregator(clean_df):
         clean_df[text] = abs(clean_df[period2] - clean_df[period1])
 
     #Converts change over time columns to bins
+    # Has flags for areas that may be missing data entirely
     for column in change_columns:
-        mid_bound = clean_df[column].quantile(q = 0.333, interpolation = "lower")
-        high_bound = clean_df[column].quantile(q = 0.666, interpolation = "lower")
-        lmh_bins = [float("-inf"), mid_bound, high_bound, float("inf")]
-        clean_df[column] = pd.cut(clean_df[column], bins = lmh_bins, labels = ["low", "medium", "high"])
+        mid_bound_s = clean_df[clean_df[column] > 0].quantile(
+            q = 0.333, interpolation = "lower")
+        high_bound_s = clean_df[clean_df[column] > 0].quantile(
+            q = 0.666, interpolation = "lower")
+        lmh_bins = [float("-inf"), 0, mid_bound_s[column],
+                     high_bound_s[column], float("inf")]
+        clean_df[column] = pd.cut(clean_df[column], bins = lmh_bins,
+                labels = ["No Data", "low", "medium", "high"])
 
     return clean_df
 
 ######## Functions Running Secondary Sources #########
 
-#depaul_clean()
-#city_blc_clean()
-#city_permit_clean()
-#city_vacant_clean()
+depaul_clean()
+city_vacant_clean()
 eviction_clean()
+
+##### Larger Data Files Required: Only run if available ######
+
+if pathlib.Path(BLC_PATH).is_file():
+    city_blc_clean()
+if pathlib.Path(PERMIT_PATH).is_file():
+    city_permit_clean()
