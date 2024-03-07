@@ -34,7 +34,6 @@ Our app allows you to explore changes in the following demographic variables:
 A brief description of secondary data sources available to you in analysis include:
 
 - City Building Permits: Building permit applications submitted - a rough proxy of new or additional construction activity.
-- City Business Licenses: Business license applications submitted - a rough proxy of new or additional economic activity.
 - Eviction Filings: The number of eviction proceedings filed in an area - conceptually may be linked to higher rents or property values (data available only for 2010-2019).
 - DePaul Housing Price Index: an index of home prices relative to the year 2000 - a measure of homeowner costs in an area.
 - City Vacant and Abandoned Building Violations: Recorded complaints investigated by the city related to derelict or empty buildings (data available only for 2010-2022). 
