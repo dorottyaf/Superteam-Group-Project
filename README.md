@@ -5,6 +5,8 @@ This project studies demographic change in Chicago community areas in relationsh
 
 Using a fuzzy geomatching algorithm, we grouped our tract-level Census data into community area data. When run as an app, this project allows a user to study the biggest demographic shifts out of all Chicago neighborhoods, visualize these changes, and investigate contemperaneous change in housing or economic measurements. 
 
+Note: the following instructions assume you are running the commands from the root Superteam-Group-Project directory
+
 To run this project on your own machine, complete the following steps: 
 
 1) Ensure [poetry is installed on your local machine](https://python-poetry.org/docs/)
